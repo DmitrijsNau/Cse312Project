@@ -49,7 +49,7 @@ docker compose up
 
 ### Using Nix
 
-#### Entering Development Shell
+#### Entering development shell
 
 ```sh
 nix develop
