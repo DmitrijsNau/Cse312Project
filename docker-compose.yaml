@@ -15,8 +15,10 @@ services:
     build: .
     environment:
       DATABASE_URL: postgres://BDSME:cse312@db:5432/BDSME
+      DOCKER_ENV: "docker"
+
     ports:
-      - '8080:8080'
+      - '8080:80'
     depends_on:
       - db
 
