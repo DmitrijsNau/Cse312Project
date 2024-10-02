@@ -4,7 +4,9 @@
 
 - Use branches for features
 - Only merge branches to dev (dev will be merged to main during meetings)
-- IF YOU ADD ANY NEW DEPENDENCIES: make sure to run pip freeze > requirements.txt
+- IF YOU ADD ANY NEW DEPENDENCIES: make sure to run
+  `pip freeze >
+  requirements.txt`
 
 ## Getting Started
 
@@ -43,4 +45,18 @@
 
 ```sh
 docker compose up
+```
+
+### Using Nix
+
+#### Entering development shell
+
+```sh
+nix develop
+```
+
+#### Starting the server
+
+```sh
+nix run
 ```
