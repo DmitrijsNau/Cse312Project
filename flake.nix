@@ -50,6 +50,16 @@
             ${pkgs.docker}/bin/docker compose up
           '';
         };
+
+        apps.rebuild = flake-utils.lib.mkApp {
+          drv = pkgs.writeShellScriptBin "docker-compose-rebuild" ''
+            # if ! systemctl is-active --quiet docker; then
+            #   sudo systemctl start docker
+            # fi
+
+            ${pkgs.docker}/bin/docker compose up --build --force-recreate
+          '';
+        };
       }
     );
 }
