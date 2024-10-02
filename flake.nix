@@ -27,8 +27,9 @@
           ];
 
           shellHook = ''
-            quiet="--quiet"
+            export DATABASE_URL="postgresql://BDSME:cse312@db:5432/BDSME"
 
+            quiet="--quiet"
             if [ ! -d .venv ]; then
               python -m venv .venv
               unset quiet
