@@ -3,19 +3,22 @@ from sqlalchemy.orm import sessionmaker
 from app.models.user import Base
 from app.core.config import config
 
-# create an engine
-engine = create_engine(config.DATABASE_URL)
+# Determine which database URL to use
+database_url = config.DATABASE_URL
 
-# create tables
+# Connect to the database
+engine = create_engine(database_url)
+
+# Create tables (if needed)
 Base.metadata.create_all(engine)
 
-# create a configured "Session" class
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# Create configured "Session" class
+db_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 
-# Dependency to get a session
+# Dependency to get a session for the main database
 def get_db():
-    db = SessionLocal()
+    db = db_session()
     try:
         yield db
     finally:
