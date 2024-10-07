@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: BDSME
+      POSTGRES_PASSWORD: cse312
+      POSTGRES_DB: BDSME
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  app:
+    build: .
+    environment:
+      DATABASE_URL: postgres://BDSME:cse312@db:5432/BDSME
+      DOCKER_ENV: "docker"
+
+    ports:
+      - '8080:80'
+    depends_on:
+      - db
+
+volumes:
+  pgdata:
