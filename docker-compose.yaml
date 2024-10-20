@@ -14,13 +14,13 @@ services:
   app:
     build: .
     environment:
-      DATABASE_URL: postgres://BDSME:cse312@db:5432/BDSME
+      DATABASE_URL: postgresql://BDSME:cse312@db:5432/BDSME
       DOCKER_ENV: "docker"
-
     ports:
-      - '8080:80'
+      - '8080:8080'
     depends_on:
       - db
 
 volumes:
   pgdata:
+
