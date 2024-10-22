@@ -1,8 +1,10 @@
 from app.models.base import Base
 from sqlalchemy import Column, Integer, String
 from passlib.context import CryptContext
+from pydantic import BaseModel
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
 
 class User(Base):
     __tablename__ = "users"
@@ -19,3 +21,8 @@ class User(Base):
     def get_password_hash(password):
         return pwd_context.hash(password)
 
+
+class UserCreate(BaseModel):
+    name: str
+    email: str
+    password: str
