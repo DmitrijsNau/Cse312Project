@@ -1,5 +1,6 @@
 from typing import Union
-
+from fastapi.staticfiles import StaticFiles
+import os
 from fastapi import FastAPI, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -9,16 +10,17 @@ from app.models.user import User, UserCreate
 
 app = FastAPI()
 
+static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
+
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.get("/")
 def read_root():
     return {"Hello": "World"}
 
-
 @app.get("/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
-
 
 @app.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
