@@ -2,10 +2,13 @@ annotated-types==0.7.0
 anyio==4.6.0
 certifi==2024.8.30
 click==8.1.7
+distlib==0.3.8
 dnspython==2.6.1
 email_validator==2.2.0
 fastapi==0.113.0
 fastapi-cli==0.0.5
+filelock==3.15.1
+greenlet==3.1.1
 h11==0.14.0
 httpcore==1.0.6
 httptools==0.6.1
@@ -15,6 +18,8 @@ Jinja2==3.1.4
 markdown-it-py==3.0.0
 MarkupSafe==2.1.5
 mdurl==0.1.2
+passlib==1.7.4
+platformdirs==4.2.2
 psycopg2-binary==2.9.9
 pydantic==2.9.2
 pydantic_core==2.23.4
@@ -31,5 +36,6 @@ typer==0.12.5
 typing_extensions==4.12.2
 uvicorn==0.31.0
 uvloop==0.20.0
+virtualenv==20.26.2
 watchfiles==0.24.0
 websockets==13.1
