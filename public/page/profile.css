@@ -1,0 +1,109 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    line-height: 1.6;
+    background: linear-gradient(135deg, #4169E1, #E6E6FA );
+    color: #6C757D;
+}
+
+.app-header {
+    background-color: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main-nav ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+}
+
+.main-nav a {
+    color: #6C757D;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+}
+
+.main-nav a.active {
+    background-color: #4169E1;
+    color: white;
+}
+
+form input[type="submit"] {
+    background-color:rgb(155, 153, 153);
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+    background-color: #4169E1;
+    color: white;
+}
+
+.app-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.section {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.profile-card {
+    background: white;
+    border-radius: 15px;
+}
+
+.profile-info {
+    padding: 1.2rem;
+}
+
+.tags {
+    display: flex;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: #6C757D;
+}
+
+.action-buttons button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    font-size: 1.0rem;
+    background: #859feb;
+}
+
+
+.btn-skip:hover {
+    background-color: #FFE6E6; 
+    transform: scale(1.2);
+}
+
+.btn-like:hover {
+    background-color: #E6FFE6; 
+    transform: scale(1.2);
+}
+
+.action-buttons  {
+    background: #DEE2E6;
+}

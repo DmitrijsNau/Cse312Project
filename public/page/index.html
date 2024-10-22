@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body>
+    <header class="app-header">
+        <div class="logo-container">
+            <h1>Pupple</h1>
+        </div>
+    </header>
+
+    <main class="app-container">
+        <div class="credential-container">
+            <div class="credential-tabs">
+                <button class="credential-tab " data-tab="login">Sign In</button>
+                <button class="credential-tab" data-tab="register">Register</button>
+            </div>
+
+            <div class="credential-forms">
+                <form id="loginForm" class="credential-form active">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                    </div>
+                    <button type="submit" class="credential-button">Sign In</button>
+                </form>
+      
+    </main>
+    <script src="main.js"></script>
+</body>
+</html>

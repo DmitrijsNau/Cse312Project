@@ -1,0 +1,66 @@
+
+body {
+    line-height: 1.6;
+    background: white;
+}
+.app-header {
+    background-color: rgb(226, 226, 226);
+    padding: .5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.credential-container {
+    max-width: 480px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.credential-tabs {
+    display: flex;
+}
+
+.credential-tab {
+    flex: 1;
+    padding: 1rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    font-size: 1.1rem;
+    color: black;
+    cursor: pointer;
+}
+
+.credential-forms {
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group input {
+    width: 100%;
+    padding: .5rem;
+    background: rgb(228, 228, 228);
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.credential-button {
+    width: 100%;
+    padding: 1rem;
+    background: rgb(228, 228, 228);
+    border: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
