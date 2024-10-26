@@ -6,8 +6,9 @@
 
 body {
     line-height: 1.6;
-    background: linear-gradient(135deg, #4169E1, #E6E6FA );
+    background: linear-gradient(135deg, #4169E1, #E6E6FA);
     color: #6C757D;
+    min-height: 100vh;  
 }
 
 .app-header {
@@ -16,6 +17,9 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: sticky;  
+    top: 0;
+    z-index: 1000;
 }
 
 .main-nav ul {
@@ -28,6 +32,8 @@ body {
     color: #6C757D;
     padding: 0.5rem 1rem;
     border-radius: 20px;
+    text-decoration: none;  
+    transition: all 0.3s ease;  
 }
 
 .main-nav a.active {
@@ -36,11 +42,12 @@ body {
 }
 
 form input[type="submit"] {
-    background-color:rgb(155, 153, 153);
+    background-color: rgb(155, 153, 153);
     padding: 0.5rem 1rem;
     border-radius: 20px;
     border: none;
     cursor: pointer;
+    transition: all 0.3s ease;  
 }
 
 form input[type="submit"]:hover {
@@ -58,6 +65,7 @@ form input[type="submit"]:hover {
     background: white;
     border-radius: 20px;
     padding: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);  
 }
 
 .profile-card {
@@ -73,6 +81,7 @@ form input[type="submit"]:hover {
     display: flex;
     gap: 0.5rem;
     margin: 1rem 0;
+    flex-wrap: wrap;  
 }
 
 .action-buttons {
@@ -80,7 +89,7 @@ form input[type="submit"]:hover {
     justify-content: center;
     gap: 1rem;
     padding: 1rem;
-    background: #6C757D;
+    background: #DEE2E6;  
 }
 
 .action-buttons button {
@@ -89,21 +98,18 @@ form input[type="submit"]:hover {
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    font-size: 1.0rem;
+    font-size: 1rem;
     background: #859feb;
+    transition: all 0.3s ease; 
 }
 
-
 .btn-skip:hover {
-    background-color: #FFE6E6; 
+    background-color: #FFE6E6;
     transform: scale(1.2);
 }
 
 .btn-like:hover {
-    background-color: #E6FFE6; 
+    background-color: #E6FFE6;
     transform: scale(1.2);
 }
 
-.action-buttons  {
-    background: #DEE2E6;
-}
