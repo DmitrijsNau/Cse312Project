@@ -1,15 +1,24 @@
+from contextlib import asynccontextmanager
 from typing import Union
 from fastapi.staticfiles import StaticFiles
 import os
 from fastapi import FastAPI, APIRouter
-from app.routers import auth
+from app.routers import auth, pets
+from app.core.db import init_db
 
-app = FastAPI()
+
+# create databases on startup
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+    pass
+
+
+app = FastAPI(lifespan=lifespan)
 router = APIRouter()
-
 public_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "public")
 frontend_build_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "build")
-print(frontend_build_dir)
 static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
 app.include_router(auth.router, prefix="/auth")
 app.mount("/public", StaticFiles(directory=public_dir), name="public")

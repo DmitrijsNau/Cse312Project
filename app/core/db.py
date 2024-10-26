@@ -1,25 +1,30 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from app.models.user import Base
 from app.core.config import config
 
-# Determine which database URL to use
+# OK, this is weird but sqlalchemy requires you to import the models
+# however, we don't have to actually use them.
+from app.models.base import Base
+from app.models.user import User
+from app.models.pet import Pet
+
 database_url = config.DATABASE_URL
 
-# Connect to the database
 engine = create_engine(database_url)
 
-# Create tables (if needed)
-Base.metadata.create_all(engine)
-
-# Create configured "Session" class
 db_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+def init_db():
+    try:
+        Base.metadata.create_all(bind=engine)
+    except Exception as e:
+        print(f"Error creating database tables: {e}")
+        raise
 
-# Dependency to get a session for the main database
 def get_db():
     db = db_session()
     try:
         yield db
     finally:
         db.close()
+

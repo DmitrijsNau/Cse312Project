@@ -1,12 +1,13 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from fastapi.security import OAuth2PasswordRequestForm
+from fastapi import APIRouter, Depends, HTTPException, status, Response
 from sqlalchemy.orm import Session
 from app.core.db import get_db
 from app.core.user import authenticate_user, create_user
-from app.models.user import UserCreate
+from app.core.auth import set_auth_token, get_current_user, clear_auth_token
+from app.models.user import UserCreate, User
 
-router = APIRouter()
-
+router = APIRouter(
+        tags=["auth"]
+        )
 
 @router.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
@@ -17,12 +18,48 @@ def register(user: UserCreate, db: Session = Depends(get_db)):
 
 
 @router.post("/login")
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = authenticate_user(db, form_data.username, form_data.password)
+def login(
+    response: Response,
+    email: str,
+    password: str,
+    db: Session = Depends(get_db)
+):
+    user = authenticate_user(db, email, password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail="Incorrect email or password"
         )
-    return {"access_token": user.email, "token_type": "bearer"}
+    
+    token = set_auth_token(db, user)
+    
+    # Set cookie with token
+    response.set_cookie(
+        key="auth_token",
+        value=token,
+        httponly=True, # AO 2 Security
+        max_age=60 * 60 * 24  # 1 day
+    )
+    
+    return {"message": "Successfully logged in"}
+
+@router.post("/logout")
+def logout(
+    response: Response,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    # clear token in db
+    clear_auth_token(db, current_user)
+    
+    # clears token in cookeis
+    response.delete_cookie(key="auth_token")
+    
+    return {"message": "Successfully logged out"}
+
+@router.get("/status")
+def check_auth_status(current_user: User = Depends(get_current_user)):
+    return {
+        "authenticated": True,
+        "username": current_user.name
+    }
