@@ -1,78 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
 import './homepage.css';
+import config from '@config';
+import PetCard from '@components/PetCard';
 
 const Homepage = () => {
-    const handleLogout = async (e) => {
-        e.preventDefault();
-        // logging out functionality will be added here 
-    };
+    const [pets, setPets] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`${config.backendApiUrl}/pets/get-all`);
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          const result = await response.json();
+          if (!result) {
+            throw new Error('No data available');
+          }
+          if (result.err !== false) {
+            throw new Error(result.err);
+          }
+          console.log(result.data);
+          console.log(result)
+          setPets(result.data);
+        } catch (error) {
+          setError(error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
-    const handleSkip = () => {
-        // add skip match functionality later on 
-    };
-
-    const handleLike = () => {
-        // add like functionality later on 
-    };
-
+  
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+  
+    if (error) {
+      return <div>Error: {error.message}</div>;
+    }
+  
     return (
-        <>
-            <header className="app-header">
-                <div className="pupple logo">
-                    <img alt="Pupple Logo" />
-                    <h1>Pupple</h1>
-                </div>
-                <nav className="main-nav">
-                    <ul>
-                        <li><a href="#matches" className="active">Matches</a></li>
-                        <li><a href="#profile">Profile</a></li>
-                        <li><a href="#messages">Messages</a></li>
-                        <li><a href="#settings">Settings</a></li>
-                    </ul>
-                </nav>
-                <form onSubmit={handleLogout}>
-                    <input type="submit" value="Sign Out" />
-                </form>
-                <div className="user-menu">
-                </div>
-            </header>
-
-            <main className="app-container">
-                <section id="Matches" className="section active">
-                    <h2>Check Out Your Pup's Match!</h2>
-                    <div className="profile-card">
-                        <div className="profile-images">
-                            <img src="/path-to-image" alt="Matched Dog" className="main-image" />
-                        </div>
-                        <div className="profile-info">
-                            <h3>Max</h3>
-                            <p className="breed">German Shepherd</p>
-                            <p className="age">3 years old</p>
-                            <div className="tags">
-                                <span className="tag">Friendly</span>
-                                <span className="tag">Active</span>
-                                <span className="tag">Trained</span>
-                            </div>
-                            <p className="bio">
-                                Energetic and playful pup looking for adventure buddies! 
-                                Love playing fetch and going on long walks.
-                            </p>
-                            <div className="location">
-                                <span>📍 2 miles away</span>
-                            </div>
-                        </div>
-                        <div className="action-buttons">
-                            <button className="btn-skip" onClick={handleSkip}>
-                                EW!🤮
-                            </button>
-                            <button className="btn-like" onClick={handleLike}>
-                                YES!❤️
-                            </button>
-                        </div>
-                    </div>
-                </section>
-            </main>
-        </>
+    <main className="app-container">
+      <section id="Matches" className="section active">
+        <h2 class="homepage-title">Check Out Other Pets!</h2>
+        {pets && pets.map((pet) => (
+          <PetCard
+            key={pet.id}
+            pet={pet}
+          />
+        ))}
+      </section>
+    </main>
     );
 };
 

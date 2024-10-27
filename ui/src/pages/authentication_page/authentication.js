@@ -3,7 +3,6 @@ import './authentication.css';
 
 const Authentication = () => {
     const [currentView, setCurrentView] = useState('signIn');
-
     const handleFormSubmit = (e) => {
         e.preventDefault();
     };
@@ -14,11 +13,6 @@ const Authentication = () => {
 
     return (
         <>
-            <header className="app-header">
-                <div className="logo-container">
-                    <h1>Pupple</h1>
-                </div>
-            </header>
 
             <main className="app-container">
                 <div className="credential-container">
