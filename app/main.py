@@ -10,17 +10,23 @@ from app.models.user import User, UserCreate
 
 app = FastAPI()
 
-static_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "static")
+public_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "public")
+frontend_build_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "frontend", "build")
+print(frontend_build_dir)
 
-app.mount("/static", StaticFiles(directory=static_dir), name="static")
+app.mount("/public", StaticFiles(directory=public_dir), name="public")
+app.mount("/", StaticFiles(directory=frontend_build_dir, html=True), name="frontend")
 
-@app.get("/")
+
+@app.get("/api")
 def read_root():
     return {"Hello": "World"}
 
-@app.get("/items/{item_id}")
+
+@app.get("/api/items/{item_id}")
 def read_item(item_id: int, q: Union[str, None] = None):
     return {"item_id": item_id, "q": q}
+
 
 @app.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):

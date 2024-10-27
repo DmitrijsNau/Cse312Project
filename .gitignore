@@ -7,3 +7,6 @@ htmlcov
 .cache
 .venv
 .env
+
+frontend/node_modules/
+frontend/build/
