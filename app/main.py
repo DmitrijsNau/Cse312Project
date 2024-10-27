@@ -6,7 +6,6 @@ from fastapi import FastAPI, APIRouter
 from app.routers import auth, pets, likes
 from app.core.db import init_db
 
-
 # create databases on startup
 @asynccontextmanager
 async def lifespan(app: FastAPI):
