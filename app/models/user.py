@@ -11,7 +11,7 @@ class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
-    email = Column(String, nullable=False, unique=True)
+    username = Column(String, nullable=False, unique=True)
     hashed_password = Column(String, nullable=False)
     auth_token = Column(String, nullable=True)
     token_created_at = Column(DateTime, nullable=True)
@@ -29,7 +29,7 @@ class User(Base):
     @staticmethod
     def hash_token(token: str) -> str:
         return pwd_context.hash(token)
-        
+
     @staticmethod
     def verify_token(plain_token: str, hashed_token: str) -> bool:
         return pwd_context.verify(plain_token, hashed_token)
@@ -37,5 +37,5 @@ class User(Base):
 
 class UserCreate(BaseModel):
     name: str
-    email: str
+    username: str
     password: str

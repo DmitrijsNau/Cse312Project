@@ -14,6 +14,7 @@ engine = create_engine(database_url)
 
 db_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 def init_db():
     try:
         Base.metadata.create_all(bind=engine)
@@ -21,10 +22,10 @@ def init_db():
         print(f"Error creating database tables: {e}")
         raise
 
+
 def get_db():
     db = db_session()
     try:
         yield db
     finally:
         db.close()
-
