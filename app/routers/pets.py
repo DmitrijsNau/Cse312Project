@@ -19,7 +19,7 @@ async def create_new_pet(pet: PetCreate, db: Session = Depends(get_db), author: 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.get("/{pet_id}", response_model=PetResponse)
+@router.get("/get-pet-by-id", response_model=PetResponse)
 async def read_pet(pet_id: int, db: Session = Depends(get_db)):
     pet = get_pet(db, pet_id)
     if pet is None:

@@ -16,7 +16,7 @@ async def lifespan(app: FastAPI):
     pass
 
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 api = FastAPI(root_path="/api")
 # backend routes
 api_router = APIRouter()
