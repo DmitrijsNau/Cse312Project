@@ -8,5 +8,5 @@ htmlcov
 .venv
 .env
 
-frontend/node_modules/
-frontend/build/
+ui/node_modules/
+ui/build/
