@@ -19,11 +19,13 @@
       in
       {
         devShells.default = pkgs.mkShell {
-          buildInputs = [
-            pkgs.python3
-            pkgs.python3Packages.pip
-            pkgs.python3Packages.virtualenv
-            pkgs.docker
+          buildInputs = with pkgs; [
+            python3
+            python3Packages.pip
+            python3Packages.virtualenv
+            docker
+            nodejs
+            nodePackages.npm
           ];
 
           shellHook = ''
