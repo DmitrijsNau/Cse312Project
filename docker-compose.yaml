@@ -18,7 +18,9 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     environment:
       DATABASE_URL: postgresql://BDSME:cse312@db:5432/BDSME
       DOCKER_ENV: "docker"
