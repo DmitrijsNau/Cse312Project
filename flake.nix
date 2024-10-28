@@ -62,7 +62,7 @@
         apps.resetdb = flake-utils.lib.mkApp {
           drv = pkgs.writeShellScriptBin "docker-compose-rebuild" ''
             ${pkgs.docker}/bin/docker compose down 
-            ${pkgs.docker}/bin/docker volume rm pupple_pgdata
+            ${pkgs.docker}/bin/docker volume rm cse312project_pgdata
           '';
         };
 
