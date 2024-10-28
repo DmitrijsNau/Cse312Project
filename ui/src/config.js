@@ -1,5 +1,5 @@
 const config = {
-    backendApiUrl: "http://localhost:8080/api"
+    backendApiUrl: "/api"
   };
   
   export default config;

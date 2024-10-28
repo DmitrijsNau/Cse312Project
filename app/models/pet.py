@@ -48,3 +48,6 @@ class PetResponse(PetBase):
     like_count: int
     likes: List[int]
     owner_username: str
+
+    class Config:
+        from_attributes = True

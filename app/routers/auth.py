@@ -43,4 +43,4 @@ def logout(response: Response, current_user: User = Depends(get_current_user), d
 
 @router.get("/status")
 def check_auth_status(current_user: User = Depends(get_current_user)):
-    return {"authenticated": True, "username": current_user.name}
+    return {"authenticated": True, "username": current_user.username}
