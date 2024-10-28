@@ -6,6 +6,8 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from app.routers import auth, pets, likes
 from app.core.db import init_db
+from app.core.middleware import ContentTypeOptionsMiddleware
+
 
 # create databases on startup
 @asynccontextmanager
@@ -14,18 +16,22 @@ async def lifespan(app: FastAPI):
     yield
     pass
 
+
 app = FastAPI(lifespan=lifespan)
 api = FastAPI(root_path="/api")
-
+api.add_middleware(ContentTypeOptionsMiddleware)
+app.add_middleware(ContentTypeOptionsMiddleware)
 # backend routes
 api_router = APIRouter()
 api.include_router(auth.router, prefix="/auth")
 api.include_router(pets.router, prefix="/pets")
 api.include_router(likes.router, prefix="/likes")
 
+
 @app.get("/api")
 def read_root():
     return {"Hello": "World"}
+
 
 # static stuff
 frontend_build_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ui", "build")
@@ -33,6 +39,7 @@ frontend_build_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.abspat
 # serve the stuff
 # Serve the static files from the public and frontend build directories
 app.mount("/api", api)
+
 
 # Catch-all route to serve index.html for any unmatched routes
 @app.get("/{full_path:path}", include_in_schema=False)

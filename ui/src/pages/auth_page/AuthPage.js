@@ -36,7 +36,11 @@ const AuthPage = ({ setIsAuthenticated }) => {
         e.preventDefault();
         const username = document.getElementById('newUsername').value;
         const password = document.getElementById('newPassword').value;
-        
+        const passwordConfirm = document.getElementById('newPasswordConfirm').value;
+        if (password !== passwordConfirm) {
+            setError('Passwords do not match');
+            return;
+        }
         try {
             const response = await fetch('/api/auth/register', {
                 method: 'POST',
@@ -131,6 +135,15 @@ const AuthPage = ({ setIsAuthenticated }) => {
                                     id="newPassword" 
                                     required 
                                     placeholder="Create a password"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="newPassword">Password</label>
+                                <input 
+                                    type="password" 
+                                    id="newPasswordConfirm" 
+                                    required 
+                                    placeholder="Confirm password"
                                 />
                             </div>
                             <button type="submit" className="credential-button">Create Account</button>
