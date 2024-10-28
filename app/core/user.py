@@ -10,11 +10,11 @@ def get_user_by_username(db: Session, username: str):
     return db.query(User).filter(User.username == username).first()
 
 
-def create_user(db: Session, name: str, username: str, password: str):
+def create_user(db: Session, username: str, password: str):
     if get_user_by_username(db, username):
         return None  # user's username already exists
     hashed_password = User.get_password_hash(password)
-    db_user = User(name=name, username=username, hashed_password=hashed_password)
+    db_user = User(username=username, hashed_password=hashed_password)
     try:
         db.add(db_user)
         db.commit()
