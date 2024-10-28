@@ -2,4 +2,4 @@ const config = {
     backendApiUrl: "/api"
   };
   
-  export default config;
+export default config;
