@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet, Navigate, Link } from 'react-router-dom';
+import './Layout.css';
 
 const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
     const handleLogout = async (e) => {
@@ -24,11 +25,11 @@ const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
                 </div>
                 <nav className="main-nav">
                     <ul>
-                        <li><a href="#matches" className="active">Matches</a></li>
-                        <li><a href="#profile">Profile</a></li>
-                        <li><a href="#messages">Messages</a></li>
-                        <li><Link to="/create-pet">Create Pet</Link></li>
-                        <li><a href="#settings">Settings</a></li>
+                        <li><Link to="/homepage" className="nav-button">Find Pets</Link></li>
+                        <li><Link to="/create-pet" className="nav-button">Register My Pet</Link></li>
+                        <li><Link to="/homepage" className="nav-button">My Matches</Link></li>
+                        <li><Link to="/homepage" className="nav-button">My Pets</Link></li>
+                        <li><Link to="/homepage" className="nav-button">Settings</Link></li>
                     </ul>
                 </nav>
                 <form onSubmit={handleLogout}>

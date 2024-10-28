@@ -1,0 +1,35 @@
+.nav-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem; /* Set a fixed height for all buttons */
+    padding: 0 1rem; /* Adjust padding to control horizontal spacing */
+    background: #4169E1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none; /* Remove underline from links */
+    flex: 1 1 auto; /* Allow buttons to grow and shrink */
+    margin: 0.5rem; /* Add margin to create spacing between buttons */
+}
+
+.nav-button:hover {
+    background: #3158d3;
+}
+
+.main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    gap: 1rem;
+}
+
+.main-nav li {
+    flex: 1 1 auto; /* Allow list items to grow and shrink */
+}
