@@ -18,7 +18,7 @@ def read_all_pets(db: Session):
                 bio=pet.bio,
                 breed=pet.breed,
                 id=pet.id,
-                owner_name=pet.owner.username,
+                owner_username=pet.owner.username,
                 like_count=pet.get_like_count(),
                 likes=pet.likes,
             )
@@ -38,7 +38,7 @@ def create_pet(db: Session, pet_data: dict, owner_id: int) -> Response:
             bio=db_pet.bio,
             breed=db_pet.breed,
             id=db_pet.id,
-            owner_id=db_pet.owner_id,
+            owner_username=db_pet.owner.username,
             like_count=pet_like_count,
             likes=db_pet.likes,
         )

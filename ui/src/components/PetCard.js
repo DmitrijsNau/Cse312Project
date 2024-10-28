@@ -1,12 +1,10 @@
 import React from 'react';
-import './PetCard.css'; // Create a CSS file for the component styles if needed
+import './PetCard.css'; 
 
 const PetCard = ({ pet }) => {
     const handleSkip = () => {
-        // handleSkip functionality will be added here
     }
     const handleLike = () => {
-        // handleLike functionality will be added here
     }
   return (
     <div className="profile-card">
@@ -19,8 +17,7 @@ const PetCard = ({ pet }) => {
         <p className="bio">{pet.bio}</p>
       </div>
       <div className="user-info">
-        <h3>{pet.owner.name}</h3>
-        <p className="usernamne">{pet.owner.username}</p>
+        <p className="username">Owner: {pet.owner_username}</p>
       </div>
       <div className="action-buttons">
         <button className="btn-skip" onClick={handleSkip}>
