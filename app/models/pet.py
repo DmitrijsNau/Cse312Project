@@ -1,8 +1,10 @@
 from typing import List, Optional
-from app.models.base import Base
 from sqlalchemy import ARRAY, Column, ForeignKey, Integer, String, func
 from pydantic import BaseModel
 from sqlalchemy.orm import relationship, Session
+
+from app.models.base import Base
+from app.models.user import UserResponse
 
 
 class Pet(Base):
@@ -44,6 +46,6 @@ class PetCreate(PetBase):
 
 class PetResponse(PetBase):
     id: int
-    owner_id: int
     like_count: int
     likes: List[int]
+    owner: UserResponse

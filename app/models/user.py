@@ -39,3 +39,8 @@ class UserCreate(BaseModel):
     name: str
     username: str
     password: str
+
+
+class UserResponse(BaseModel):
+    name: str
+    username: str
