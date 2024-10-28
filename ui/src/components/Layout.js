@@ -2,7 +2,7 @@ import React from 'react';
 import { Outlet, Navigate, Link } from 'react-router-dom';
 import './Layout.css';
 
-const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
+const Layout = ({ isAuthenticated, setIsAuthenticated, currentUsername, setCurrentUsername }) => {
     const handleLogout = async (e) => {
         e.preventDefault();
         try {
@@ -10,6 +10,7 @@ const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
                 method: 'POST',
             });
             setIsAuthenticated(false);
+            setCurrentUsername('');
         } catch (error) {
             console.error('Failed to logout:', error);
         }
@@ -32,10 +33,13 @@ const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
                         <li><Link to="/homepage" className="nav-button">Settings</Link></li>
                     </ul>
                 </nav>
-                <form onSubmit={handleLogout}>
-                    <input type="submit" value="Sign Out" />
-                </form>
-                <div className="user-menu">
+                <div className="user-menu-container">
+                    <div className="user-menu">
+                        <p>Welcome, {currentUsername}</p>
+                    </div>
+                    <form onSubmit={handleLogout}>
+                        <input type="submit" value="Sign Out" />
+                    </form>
                 </div>
             </header>
           <main>

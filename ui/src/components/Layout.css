@@ -49,3 +49,18 @@
     width: auto;
     height: auto;
 }
+
+.user-menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the items horizontally */
+    gap: 1rem; /* Add space between the items */
+}
+
+.user-menu {
+    text-align: center;
+}
+
+form {
+    text-align: center;
+}

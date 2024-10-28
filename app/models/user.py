@@ -37,3 +37,4 @@ class User(Base):
 class UserCreate(BaseModel):
     username: str
     password: str
+    password_confirm: str

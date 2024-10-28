@@ -12,8 +12,6 @@ services:
       POSTGRES_USER: BDSME
       POSTGRES_PASSWORD: cse312
       POSTGRES_DB: BDSME
-    ports:
-      - '5432:5432'
     volumes:
       - pgdata:/var/lib/postgresql/data
 

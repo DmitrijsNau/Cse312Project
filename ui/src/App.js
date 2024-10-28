@@ -8,14 +8,14 @@ import PetRegistration from './pages/pet_registration/pet_registration';
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-
+  const [currentUsername, setCurrentUsername] = useState('');
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await fetch('/api/auth/status');
-        if (response.ok) {
-          setIsAuthenticated(true);
-        }
+        const response = await fetch('/api/auth/status'); // Replace with your actual API endpoint
+        const data = await response.json();
+        setIsAuthenticated(data.authenticated);
+        setCurrentUsername(data.username);
       } catch (error) {
         console.error('Auth check failed:', error);
       } finally {
@@ -33,7 +33,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route element={<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} />}>
+        <Route element={<Layout isAuthenticated={isAuthenticated} setIsAuthenticated={setIsAuthenticated} currentUsername={currentUsername} setCurrentUsername={setCurrentUsername} />}>
           <Route 
             path="/" 
             element={
@@ -47,7 +47,7 @@ function App() {
             element={
               isAuthenticated ? 
                 <Navigate to="/homepage" replace /> : 
-                <AuthPage setIsAuthenticated={setIsAuthenticated} />
+                <AuthPage />
             } 
           />
           <Route 

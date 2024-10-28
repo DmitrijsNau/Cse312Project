@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AuthPage.css';
 
-const AuthPage = ({ setIsAuthenticated }) => {
+const AuthPage = () => {
     const [currentView, setCurrentView] = useState('signIn');
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -23,10 +23,13 @@ const AuthPage = ({ setIsAuthenticated }) => {
             if (!response.ok) {
                 throw new Error(data.detail || 'Login failed');
             }
+            if (data.err) {
+                throw new Error(data.err);
+            }
             
-            setError('');
-            setIsAuthenticated(true);
-            navigate('/homepage');
+            setError('')
+            navigate('/homepage', { replace: true })
+            window.location.reload()
         } catch (err) {
             setError(err.message || 'Login failed.');
         }
@@ -50,6 +53,7 @@ const AuthPage = ({ setIsAuthenticated }) => {
                 body: JSON.stringify({
                     username: username,
                     password: password,
+                    password_confirm: passwordConfirm,
                 }),
             });
             
