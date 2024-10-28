@@ -32,8 +32,12 @@ const PetCard = ({ pet }) => {
 
       if (response.ok) {
         setLiked(!liked);
-        setLikeCount(prevCount => liked ? prevCount - 1 : prevCount + 1);
-      }
+        const countResponse = await fetch(`/api/likes/${pet.id}/count`, { credentials: "include"})
+        if (countResponse.ok) {
+          const countData = await countResponse.json();
+          setLikeCount(countData.likes_count)
+        }
+      }  
     } catch (error) {
       console.error('Error toggling like:', error);
     }
