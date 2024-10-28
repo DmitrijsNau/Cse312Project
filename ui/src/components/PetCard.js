@@ -55,7 +55,7 @@ const PetCard = ({ pet }) => {
           onClick={handleLike}
           aria-label={liked ? 'Unlike' : 'Like'}
         >
-          <span className="like-count">❤️ {likeCount}</span>
+          ❤️ {likeCount}
         </button>
       </div>
     </div>
