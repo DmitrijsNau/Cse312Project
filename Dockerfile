@@ -1,5 +1,5 @@
 # Builds UI as first stage
-FROM node:18 as ui-builder
+FROM node:18 AS ui-builder
 WORKDIR /app
 COPY ui/ ./ui/
 WORKDIR /app/ui
