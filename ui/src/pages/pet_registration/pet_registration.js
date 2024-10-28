@@ -37,7 +37,7 @@ const PetRegistration = () => {
             const data = await response.json();
 
             if (!response.ok) {
-                throw new Error(data.detail || 'Failed to register pet');
+                throw new Error(data.message || 'Failed to register pet');
             }
 
             // Redirect to homepage on success

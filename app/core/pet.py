@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List, Optional
 from app.models.pet import Pet, PetResponse
 from app.models.response import Response
@@ -8,8 +8,22 @@ def get_pet(db: Session, pet_id: int) -> Optional[Pet]:
     return db.query(Pet).filter(Pet.id == pet_id).first()
 
 
-def get_all_pets(db: Session, skip: int = 0, limit: int = 100) -> List[Pet]:
-    return db.query(Pet).offset(skip).limit(limit).all()
+def read_all_pets(db: Session):
+    pets = db.query(Pet).options(joinedload(Pet.owner)).all()
+    pet_list_response = []
+    for pet in pets:
+        pet_list_response.append(
+            PetResponse(
+                name=pet.name,
+                bio=pet.bio,
+                breed=pet.breed,
+                id=pet.id,
+                owner_name=pet.owner.username,
+                like_count=pet.get_like_count(),
+                likes=pet.likes,
+            )
+        )
+    return Response(data=pet_list_response, err=False, status_code=200)
 
 
 def create_pet(db: Session, pet_data: dict, owner_id: int) -> Response:

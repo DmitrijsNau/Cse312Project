@@ -4,7 +4,6 @@ from pydantic import BaseModel
 from sqlalchemy.orm import relationship, Session
 
 from app.models.base import Base
-from app.models.user import UserResponse
 
 
 class Pet(Base):
@@ -48,4 +47,4 @@ class PetResponse(PetBase):
     id: int
     like_count: int
     likes: List[int]
-    owner: UserResponse
+    owner_username: str

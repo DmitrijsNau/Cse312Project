@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, Navigate } from 'react-router-dom';
+import { Outlet, Navigate, Link } from 'react-router-dom';
 
 const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
     const handleLogout = async (e) => {
@@ -20,13 +20,14 @@ const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
             <header className="app-header">
                 <div className="pupple logo">
                     <img alt="Pupple Logo" />
-                    <h1>Authed</h1>
+                    <h1>Pupple</h1>
                 </div>
                 <nav className="main-nav">
                     <ul>
                         <li><a href="#matches" className="active">Matches</a></li>
                         <li><a href="#profile">Profile</a></li>
                         <li><a href="#messages">Messages</a></li>
+                        <li><Link to="/create-pet">Create Pet</Link></li>
                         <li><a href="#settings">Settings</a></li>
                     </ul>
                 </nav>

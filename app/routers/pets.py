@@ -1,12 +1,12 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session, joinedload
+from sqlalchemy.orm import Session
 from fastapi.responses import JSONResponse
 
 from app.core.auth import get_current_user
-from app.models.user import User, UserResponse
+from app.models.user import User
 from app.core.db import get_db
 from app.models.pet import Pet
-from app.core.pet import get_pet, create_pet, toggle_like
+from app.core.pet import get_pet, create_pet, toggle_like, read_all_pets
 from app.models.pet import PetCreate, PetResponse
 from app.models.response import Response
 
@@ -31,25 +31,6 @@ async def read_pet(pet_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/get-all", response_model=Response)
-async def get_all_pets(db: Session = Depends(get_db)):
-    pets = db.query(Pet).options(joinedload(Pet.owner)).all()
-    pet_list_response = []
-    for pet in pets:
-        owner = UserResponse(
-            name=pet.owner.name,
-            username=pet.owner.username,
-        )
-        pet_list_response.append(
-            PetResponse(
-                name=pet.name,
-                bio=pet.bio,
-                breed=pet.breed,
-                id=pet.id,
-                owner_id=pet.owner_id,
-                like_count=pet.get_like_count(),
-                likes=pet.likes,
-                owner=owner,
-            )
-        )
-    data = Response(data=pet_list_response, err=False, status_code=200)
-    return JSONResponse(content=data.model_dump(), status_code=data.status_code)
+def get_all_pets(db: Session = Depends(get_db)):
+    response = read_all_pets(db)
+    return JSONResponse(content=response.model_dump(), status_code=response.status_code)
