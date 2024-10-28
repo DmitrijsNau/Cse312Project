@@ -1,9 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from fastapi.responses import JSONResponse
 
 from app.core.auth import get_current_user
-from app.core.user import User
+from app.models.user import User, UserResponse
 from app.core.db import get_db
 from app.models.pet import Pet
 from app.core.pet import get_pet, create_pet, toggle_like
@@ -22,7 +22,7 @@ async def create_new_pet(pet: PetCreate, db: Session = Depends(get_db), author: 
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
-@router.get("/get-pet-by-id", response_model=PetResponse)
+@router.get("/by-id", response_model=PetResponse)
 async def read_pet(pet_id: int, db: Session = Depends(get_db)):
     pet = get_pet(db, pet_id)
     if pet is None:
@@ -32,9 +32,13 @@ async def read_pet(pet_id: int, db: Session = Depends(get_db)):
 
 @router.get("/get-all", response_model=Response)
 async def get_all_pets(db: Session = Depends(get_db)):
-    pets = db.query(Pet).all()
+    pets = db.query(Pet).options(joinedload(Pet.owner)).all()
     pet_list_response = []
     for pet in pets:
+        owner = UserResponse(
+            name=pet.owner.name,
+            username=pet.owner.username,
+        )
         pet_list_response.append(
             PetResponse(
                 name=pet.name,
@@ -44,6 +48,8 @@ async def get_all_pets(db: Session = Depends(get_db)):
                 owner_id=pet.owner_id,
                 like_count=pet.get_like_count(),
                 likes=pet.likes,
+                owner=owner,
             )
         )
-    return Response(data=pet_list_response, err=False, status_code=200)
+    data = Response(data=pet_list_response, err=False, status_code=200)
+    return JSONResponse(content=data.model_dump(), status_code=data.status_code)
