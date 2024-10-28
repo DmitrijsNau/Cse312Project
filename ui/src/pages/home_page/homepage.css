@@ -11,36 +11,6 @@ body {
     min-height: 100vh;  
 }
 
-.app-header {
-    background-color: white;
-    padding: 1rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    position: sticky;  
-    top: 0;
-    z-index: 1000;
-}
-
-.main-nav ul {
-    display: flex;
-    gap: 2rem;
-    list-style: none;
-}
-
-.main-nav a {
-    color: #6C757D;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    text-decoration: none;  
-    transition: all 0.3s ease;  
-}
-
-.main-nav a.active {
-    background-color: #4169E1;
-    color: white;
-}
-
 .homepage-title{
     text-align: center;
     margin: 2rem 0;

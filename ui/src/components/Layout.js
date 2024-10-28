@@ -20,7 +20,7 @@ const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
         <div>
             <header className="app-header">
                 <div className="pupple logo">
-                    <img alt="Pupple Logo" />
+                    <img src='/logo.png' alt="Pupple Logo" />
                     <h1>Pupple</h1>
                 </div>
                 <nav className="main-nav">
