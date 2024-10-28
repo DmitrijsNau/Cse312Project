@@ -2,8 +2,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 3rem; /* Set a fixed height for all buttons */
-    padding: 0 1rem; /* Adjust padding to control horizontal spacing */
+    height: 3rem;
+    padding: 0 1rem; 
     background: #4169E1;
     color: white;
     border: none;
@@ -12,9 +12,9 @@
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    text-decoration: none; /* Remove underline from links */
-    flex: 1 1 auto; /* Allow buttons to grow and shrink */
-    margin: 0.5rem; /* Add margin to create spacing between buttons */
+    text-decoration: none; 
+    flex: 1 1 auto; 
+    margin: 0.5rem; 
 }
 
 .nav-button:hover {
@@ -26,12 +26,12 @@
     padding: 0;
     margin: 0;
     display: flex;
-    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    flex-wrap: wrap;
     gap: 1rem;
 }
 
 .main-nav li {
-    flex: 1 1 auto; /* Allow list items to grow and shrink */
+    flex: 1 1 auto;
 }
 .app-header {
     background-color: white;
@@ -42,4 +42,10 @@
     position: sticky;  
     top: 0;
     z-index: 1000;
+}
+.logo img {
+    max-width: 100px;
+    max-height: 100px;
+    width: auto;
+    height: auto;
 }

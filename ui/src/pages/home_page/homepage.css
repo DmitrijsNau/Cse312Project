@@ -16,18 +16,16 @@ body {
     margin: 2rem 0;
 }
 
-/* Grid styles */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 20px;
 }
 
-/* Profile card styles */
 .profile-card {
     background: white;
     border-radius: 15px;
-    margin-bottom: 20px; /* Add margin to create separation */
+    margin-bottom: 20px;
     padding: 20px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
