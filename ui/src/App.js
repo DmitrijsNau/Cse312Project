@@ -58,11 +58,15 @@ function App() {
                 <Navigate to="/login" replace />
             } 
           />
+          <Route 
+            path="/create-pet" 
+            element={
+              isAuthenticated ?
+              <PetRegistration /> :
+              <Navigate to="/login" replace />
+            }
+          />
         </Route>
-        <Route 
-          path="/register-pet" 
-          element={<PetRegistration />}
-        />
       </Routes>
     </Router>
   );
