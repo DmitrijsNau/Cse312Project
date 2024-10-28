@@ -49,12 +49,14 @@ const Homepage = () => {
     <main className="app-container">
       <section id="Matches" className="section active">
         <h2 class="homepage-title">Check Out Other Pets!</h2>
+        <div className="grid-container">
         {pets && pets.map((pet) => (
           <PetCard
             key={pet.id}
             pet={pet}
           />
         ))}
+        </div>
       </section>
     </main>
     );

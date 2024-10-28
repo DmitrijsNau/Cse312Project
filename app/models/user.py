@@ -10,7 +10,6 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
     username = Column(String, nullable=False, unique=True)
     hashed_password = Column(String, nullable=False)
     auth_token = Column(String, nullable=True)
@@ -36,6 +35,10 @@ class User(Base):
 
 
 class UserCreate(BaseModel):
-    name: str
     username: str
     password: str
+
+
+class UserResponse(BaseModel):
+    name: str
+    username: str

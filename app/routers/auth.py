@@ -10,7 +10,7 @@ router = APIRouter(tags=["auth"])
 
 @router.post("/register")
 def register(user: UserCreate, db: Session = Depends(get_db)):
-    db_user = create_user(db, user.name, user.username, user.password)
+    db_user = create_user(db, user.username, user.password)
     if db_user is None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="username already registered")
     return {"message": "User created successfully", "user_id": db_user.id}
@@ -25,7 +25,7 @@ def login(response: Response, username: str, password: str, db: Session = Depend
     token = set_auth_token(db, user)
 
     # Set cookie with token
-    response.set_cookie(key="auth_token", value=token, httponly=True, max_age=60 * 60 * 24)  # AO 2 Security  # 1 day
+    response.set_cookie(key="auth_token", value=token, httponly=True, max_age=60 * 60 * 24)  # AO 2 Security - 1 day expiry
 
     return {"message": "Successfully logged in"}
 
