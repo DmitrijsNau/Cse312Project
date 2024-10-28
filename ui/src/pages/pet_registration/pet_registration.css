@@ -1,0 +1,64 @@
+.pet-registration-container {
+    max-width: 480px;
+    margin: 2rem auto;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.pet-registration-container h2 {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: #333;
+}
+
+.pet-registration-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.pet-registration-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+.pet-registration-form input,
+.pet-registration-form textarea {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.pet-registration-form textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.submit-button {
+    width: 100%;
+    padding: 1rem;
+    background: #4169E1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-button:hover {
+    background: #3158d3;
+}
+
+.error-message {
+    background: #ffe6e6;
+    color: #d63031;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+

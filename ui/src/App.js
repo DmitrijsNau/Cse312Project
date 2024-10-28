@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import AuthPage from './pages/auth_page/AuthPage';
 import Homepage from './pages/home_page/homepage';
 import Layout from './components/Layout';
+import PetRegistration from './pages/pet_registration/pet_registration';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -58,6 +59,10 @@ function App() {
             } 
           />
         </Route>
+        <Route 
+          path="/register-pet" 
+          element={<PetRegistration />}
+        />
       </Routes>
     </Router>
   );
