@@ -1,10 +1,17 @@
 import React from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
 
-const Layout = ({ isAuthenticated }) => {
+const Layout = ({ isAuthenticated, setIsAuthenticated }) => {
     const handleLogout = async (e) => {
         e.preventDefault();
-        // logging out functionality will be added here 
+        try {
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+            });
+            setIsAuthenticated(false);
+        } catch (error) {
+            console.error('Failed to logout:', error);
+        }
     };
   return (
     <div>
