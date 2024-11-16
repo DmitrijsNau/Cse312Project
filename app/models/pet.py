@@ -14,6 +14,7 @@ class Pet(Base):
     bio = Column(String, nullable=True)
     breed = Column(String, nullable=True)
     likes = Column(ARRAY(Integer), server_default="{}", nullable=False)
+    image_url = Column(String, nullable=False)
 
     owner = relationship("User", back_populates="pets")
 
@@ -37,10 +38,7 @@ class PetBase(BaseModel):
     name: str
     bio: Optional[str] = None
     breed: str
-
-
-class PetCreate(PetBase):
-    pass  # this inherits all of PetBase for input validation
+    image: str
 
 
 class PetResponse(PetBase):

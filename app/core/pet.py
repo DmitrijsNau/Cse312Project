@@ -1,7 +1,13 @@
+import os
+import uuid
+import shutil
+
+from fastapi import UploadFile
 from sqlalchemy.orm import Session, joinedload
-from typing import List, Optional
+from typing import Optional
 from app.models.pet import Pet, PetResponse
 from app.models.response import Response
+from app.core.config import config
 
 
 def get_pet(db: Session, pet_id: int) -> Optional[Pet]:
@@ -21,12 +27,19 @@ def read_all_pets(db: Session):
                 owner_username=pet.owner.username,
                 like_count=pet.get_like_count(),
                 likes=pet.likes,
+                image=pet.image_url,
             )
         )
     return Response(data=pet_list_response, err=False, status_code=200)
 
 
-def create_pet(db: Session, pet_data: dict, owner_id: int) -> Response:
+def create_pet(db: Session, pet_data: dict, owner_id: int, image: UploadFile) -> Response:
+    image_filename = uuid.uuid4().hex
+    image_path = config.FRONTEND_BUILD_DIR + f"{image_filename}.{image.content_type.split('/')[1]}"
+    with open(image_path, "wb") as buffer:
+        shutil.copyfileobj(image.file, buffer)
+
+    pet_data["image_url"] = image_path
     db_pet = Pet(**pet_data, owner_id=owner_id)
     db.add(db_pet)
     try:
