@@ -1,14 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile, Form
-from sqlalchemy.orm import Session
+from fastapi import (APIRouter, Depends, File, Form, HTTPException, UploadFile,
+                     status)
 from fastapi.responses import JSONResponse
+from sqlalchemy.orm import Session
 
 from app.core.auth import get_current_user
-from app.models.user import User
 from app.core.db import get_db
-from app.models.pet import Pet
-from app.core.pet import get_pet, create_pet, toggle_like, read_all_pets
-from app.models.pet import PetResponse
+from app.core.pet import create_pet, delete_pet, get_pet, read_all_pets
+from app.models.pet import Pet, PetResponse
 from app.models.response import Response
+from app.models.user import User
 
 router = APIRouter(tags=["pets"])
 
@@ -32,6 +32,31 @@ async def create_new_pet(
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
+@router.get("/my-pets", response_model=Response)
+async def get_my_pets(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        user_pets = db.query(Pet).filter(Pet.owner_id == current_user.id).all()
+        pet_list_response = []
+        for pet in user_pets:
+            pet_list_response.append(
+                PetResponse(
+                    name=pet.name,
+                    bio=pet.bio,
+                    breed=pet.breed,
+                    id=pet.id,
+                    owner_username=current_user.username,
+                    like_count=pet.get_like_count(),
+                    likes=pet.likes,
+                    image=pet.image_url,
+                )
+            )
+        return Response(data=pet_list_response, err=False, status_code=200)
+    except Exception as e:
+        return Response(message=str(e), err=True, status_code=500)
+
 
 @router.get("/by-id", response_model=PetResponse)
 async def read_pet(pet_id: int, db: Session = Depends(get_db)):
@@ -45,3 +70,18 @@ async def read_pet(pet_id: int, db: Session = Depends(get_db)):
 def get_all_pets(db: Session = Depends(get_db)):
     response = read_all_pets(db)
     return JSONResponse(content=response.model_dump(), status_code=response.status_code)
+
+@router.delete("/{pet_id}", response_model=Response)
+async def delete_pet_endpoint(
+    pet_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    try:
+        result = delete_pet(db, pet_id, current_user.id)
+        if result:
+            return Response(message="Pet deleted successfully", err=False, status_code=200)
+        else:
+            return Response(message="Pet not found or you don't have permission to delete it", err=True, status_code=404)
+    except Exception as e:
+        return Response(message=str(e), err=True, status_code=500)

@@ -1,13 +1,13 @@
-import os
-import uuid
 import shutil
+import uuid
+from typing import Optional
 
 from fastapi import UploadFile
 from sqlalchemy.orm import Session, joinedload
-from typing import Optional
+
+from app.core.config import config
 from app.models.pet import Pet, PetResponse
 from app.models.response import Response
-from app.core.config import config
 
 
 def get_pet(db: Session, pet_id: int) -> Optional[Pet]:
@@ -59,6 +59,33 @@ def create_pet(db: Session, pet_data: dict, owner_id: int, image: UploadFile) ->
     except Exception as e:
         db.rollback()
         return Response(message=str(e), err=True, status_code=500)
+
+
+# def delete_pet(db: Session, pet_id: int, owner_id: int) -> bool:
+#     try:
+#         pet = db.query(Pet).filter(
+#             Pet.id == pet_id,
+#             Pet.owner_id == owner_id
+#         ).first()
+#
+#         if not pet:
+#             return False
+#
+#         if pet.image_url and os.path.exists(pet.image_url):
+#             try:
+#                 os.remove(pet.image_url)
+#             except OSError as e:
+#                 print(f"Error deleting pet image file: {e}")
+#
+#         db.delete(pet)
+#         db.commit()
+#
+#         return True
+#
+#     except Exception as e:
+#         db.rollback()
+#         print(f"Error deleting pet: {e}")
+#         return False
 
 
 def delete_pet(db: Session, pet_id: int, owner_id: int) -> bool:
