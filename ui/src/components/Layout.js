@@ -42,11 +42,6 @@ const Layout = ({
                   </Link>
                 </li>
                 <li>
-                  <Link to="/homepage" className="nav-button">
-                    My Matches
-                  </Link>
-                </li>
-                <li>
                   <Link to="/my-pets" className="nav-button">
                     My Pets
                   </Link>
@@ -63,7 +58,7 @@ const Layout = ({
                 <p>Welcome, {currentUsername}</p>
               </div>
               <form onSubmit={handleLogout}>
-                <input type="submit" value="Sign Out" />
+                <input className="nav-button" type="submit" value="Sign Out" />
               </form>
             </div>
           </header>
