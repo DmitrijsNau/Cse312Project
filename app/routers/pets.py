@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import (APIRouter, Depends, File, Form, HTTPException, UploadFile,
                      status)
 from fastapi.responses import JSONResponse
@@ -18,19 +20,28 @@ async def create_new_pet(
     name: str = Form(...),
     bio: str = Form(None),
     breed: str = Form(...),
-    image: UploadFile = File(...),
+    image: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
     author: User = Depends(get_current_user),
 ):
-    allowed_file_types = ["image/png", "image/jpeg", "image/jpg"]
-    if image.content_type not in allowed_file_types:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Invalid file type. Must be .png, .jpeg, .jpg")
     try:
-        pet_data = {"name": name, "bio": bio, "breed": breed}
+        pet_data = {
+            "name": name,
+            "bio": bio,
+            "breed": breed,
+        }
+        
         response = create_pet(db, pet_data, author.id, image)
-        return JSONResponse(content=response.model_dump(), status_code=response.status_code)
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
+        return JSONResponse(content=response.model_dump(), 
+                          status_code=response.status_code)
+                          
+    except HTTPException:
+        raise
+    except Exception:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail="An error occurred while processing the image"
+        )
 
 @router.get("/my-pets", response_model=Response)
 async def get_my_pets(
@@ -50,7 +61,7 @@ async def get_my_pets(
                     owner_username=current_user.username,
                     like_count=pet.get_like_count(),
                     likes=pet.likes,
-                    image=pet.image_url,
+                    image_url=pet.image_url,
                 )
             )
         return Response(data=pet_list_response, err=False, status_code=200)
