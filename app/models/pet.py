@@ -1,7 +1,8 @@
 from typing import List, Optional
-from sqlalchemy import ARRAY, Column, ForeignKey, Integer, String, func
+
 from pydantic import BaseModel
-from sqlalchemy.orm import relationship, Session
+from sqlalchemy import ARRAY, Column, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 
 from app.models.base import Base
 
@@ -14,6 +15,7 @@ class Pet(Base):
     bio = Column(String, nullable=True)
     breed = Column(String, nullable=True)
     likes = Column(ARRAY(Integer), server_default="{}", nullable=False)
+    image_url = Column(String, nullable=True)
 
     owner = relationship("User", back_populates="pets")
 
@@ -37,10 +39,7 @@ class PetBase(BaseModel):
     name: str
     bio: Optional[str] = None
     breed: str
-
-
-class PetCreate(PetBase):
-    pass  # this inherits all of PetBase for input validation
+    image_url: Optional[str] = None
 
 
 class PetResponse(PetBase):

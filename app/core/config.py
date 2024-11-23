@@ -1,4 +1,5 @@
 import os
+
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,5 +13,11 @@ class _Config:
     else:
         DATABASE_URL = os.getenv("LOCAL_DATABASE_URL", "")
 
+    FRONTEND_BUILD_DIR = os.path.join("/app","ui","build")
+
+    UPLOAD_DIR = os.path.join("/app","uploads")
+    IMAGES_PATH = "/images"
 
 config = _Config()
+
+os.makedirs(config.UPLOAD_DIR, exist_ok=True)

@@ -3,8 +3,8 @@ FROM node:18 AS ui-builder
 WORKDIR /app
 COPY ui/ ./ui/
 WORKDIR /app/ui
-RUN npm install 
-RUN npm run build 
+RUN npm install
+RUN npm run build
 
 # Builds python app as second stage
 FROM python:3.11
@@ -18,6 +18,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY app/ ./app/
+COPY uploads/ ./uploads/
 
 EXPOSE 8080
 

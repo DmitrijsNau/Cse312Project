@@ -1,0 +1,131 @@
+.imageContainer {
+  position: relative;
+  width: 100%;
+  height: 16rem;
+  margin: 1rem 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: #f3f4f6;
+}
+
+.petImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imagePlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+}
+
+.placeholderImage {
+  width: 8rem;
+  height: 8rem;
+  opacity: 0.5;
+}
+
+.card {
+  background: white;
+  border-radius: 15px;
+  margin-bottom: 20px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.infoSection {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.petName {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.textContent {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 5px;
+}
+
+.italicText {
+  font-style: italic;
+  color: #888;
+}
+
+.bioText {
+  font-size: 1.1rem;
+  color: #444;
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-evenly;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.actionButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.buttonIcon {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.likeButton {
+  composes: actionButton;
+  background-color: #4169E1;
+}
+
+.likeButton:hover {
+  background-color: #3158d3;
+}
+
+.likeButtonLiked {
+  composes: actionButton;
+  background-color: #444444;
+}
+
+.deleteButton {
+  composes: actionButton;
+  background-color: #dc2626;
+}
+
+.deleteButton:hover {
+  background-color: #b91c1c;
+}
+
+.matchesButton {
+  composes: actionButton;
+  background-color: #8b5cf6;
+}
+
+.matchesButton:hover {
+  background-color: #7c3aed;
+}
+
+.filledIcon {
+  fill: white;
+}

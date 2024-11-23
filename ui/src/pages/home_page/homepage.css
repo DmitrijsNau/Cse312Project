@@ -11,9 +11,20 @@ body {
     min-height: 100vh;  
 }
 
-.homepage-title{
+.page-title-container {
+  justify-content: center;
+  display: flex;
+}
+
+.page-title{
+    padding: 2rem;
+    margin: 1rem 0;
+    margin-top: -0.75em;
     text-align: center;
-    margin: 2rem 0;
+    align-content: center;
+    color: #6c757d;
+    background: white;
+    border-radius: 10px;
 }
 
 .grid-container {
