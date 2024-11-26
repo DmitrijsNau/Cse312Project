@@ -96,3 +96,27 @@ async def delete_pet_endpoint(
             return Response(message="Pet not found or you don't have permission to delete it", err=True, status_code=404)
     except Exception as e:
         return Response(message=str(e), err=True, status_code=500)
+
+
+@router.get("/{pet_id}/matches", response_model=Response)
+async def get_pet_matches(
+    pet_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    pet = get_pet(db, pet_id)
+    if not pet or pet.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Pet not found or unauthorized"
+        )
+        
+    matched_users = db.query(User).filter(User.id.in_(pet.likes)).all()
+    return Response(
+        data=[{
+            "id": user.id,
+            "username": user.username
+        } for user in matched_users],
+        err=False,
+        status_code=200
+    )
