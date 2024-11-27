@@ -35,6 +35,9 @@
   margin-bottom: 20px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  min-height: 100px; /* Ensure the card has a minimum height */
+  min-width: 200px; /* Ensure the card has a minimum width */
+  overflow: hidden; /* Ensure content does not overflow the card */
 }
 
 .infoSection {

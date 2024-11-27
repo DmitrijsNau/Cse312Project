@@ -11,6 +11,7 @@ import MyPets from "./pages/my_pets/my_pets";
 import Layout from "./components/Layout";
 import PetRegistration from "./pages/pet_registration/pet_registration";
 import MatchesList from './pages/matches/matches';
+import MyLikes from "./pages/my_likes/my_likes";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -92,11 +93,20 @@ function App() {
               )
             }
           />
-
           <Route
             path="/matches/:petId"
             element={
             isAuthenticated ? <MatchesList /> : <Navigate to="/login" replace />
+          }
+          />        
+        <Route
+            path="/my-likes/:petId"
+            element={
+              isAuthenticated ? (
+                <MyLikes />
+              ) : (
+                <Navigate to="/login" replace />
+              )
             }
           />
         </Route>
