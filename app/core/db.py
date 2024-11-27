@@ -24,8 +24,12 @@ def init_db():
 
 
 def get_db():
+    print("Getting db")
     db = db_session()
     try:
         yield db
+    except Exception as e:
+        print(f"Error creating database tables: {e}")
+        raise
     finally:
         db.close()

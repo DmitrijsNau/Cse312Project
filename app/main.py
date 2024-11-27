@@ -9,7 +9,7 @@ from app.core.ws import ConnectionManager
 from app.core.config import config
 from app.core.db import init_db
 from app.core.middleware import ContentTypeOptionsMiddleware
-from app.routers import auth, likes, pets
+from app.routers import auth, likes, pets, conversations
 
 
 # create databases on startup
@@ -29,6 +29,7 @@ api_router = APIRouter()
 api.include_router(auth.router, prefix="/auth")
 api.include_router(pets.router, prefix="/pets")
 api.include_router(likes.router, prefix="/likes")
+api.include_router(conversations.router, prefix="/conversations")
 
 manager = ConnectionManager()
 

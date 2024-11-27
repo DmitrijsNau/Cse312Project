@@ -14,19 +14,35 @@ const MatchesList = () => {
   const [error, setError] = useState(null);
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [socket, setSocket] = useState(null);
 
 
   const { petId } = useParams();
   const navigate = useNavigate();
 
-  const onDMsClick = (userId) => {
+  const startDM = (userId) => {
     setSelectedUserId(userId);
     setIsModalOpen(true);
+
+    // Establish WebSocket connection
+    const ws = new WebSocket(`ws://localhost:8000/ws?conversationId=${userId}`);
+    ws.onopen = () => {
+      console.log('WebSocket connected');
+    };
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      console.log('Received message:', message);
+    };
+    setSocket(ws);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedUserId(null);
+    if (socket) {
+      socket.close();
+      setSocket(null);
+    }
   };
 
 
@@ -117,8 +133,8 @@ const MatchesList = () => {
                 <div className={styles.buttonGroup}>
         <button
           className={styles.actionButton}
-          onClick={() => onDMsClick(match.id)}
-          aria-label="View DMs"
+          onClick={() => startDM(match.id)}
+          aria-label="Start DM"
         >
           <MessagesSquare className={styles.buttonIcon} />
           <span>DM</span>
@@ -149,6 +165,7 @@ const MatchesList = () => {
         isOpen={isModalOpen}
         onClose={closeModal}
         recipientId={selectedUserId}
+        socket={socket}
       />
     </main>
   );

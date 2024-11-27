@@ -1,6 +1,6 @@
 import React, { useState }   from "react";
 import { Outlet, Link } from "react-router-dom";
-import ChatModal from '@components/ChatModal';
+import ConversationsModal from '@components/ConversationsModal';
 
 import "./Layout.css";
 
@@ -81,7 +81,7 @@ const Layout = ({
           <main>
             <Outlet />
           </main>
-          <ChatModal
+          <ConversationsModal
         isOpen={isChatModalOpen}
         onClose={closeChatModal}
         recipientId={selectedUserId}
