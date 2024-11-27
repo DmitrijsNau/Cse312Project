@@ -83,8 +83,12 @@ const MyPets = () => {
               actions={[
                 { type: "delete", handler: handleDelete },
                 {
+                  type: "myLikes",
+                  handler: (petId) => navigate(`/my-likes/${petId}`),
+                },
+                {
                   type: "matches",
-                  handler: (petId) => navigate(`/matches/${petId}`),
+                  handler: (petId) => navigate(`/my-matches/${petId}`),
                 },
               ]}
             />

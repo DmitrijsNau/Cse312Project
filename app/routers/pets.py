@@ -1,7 +1,6 @@
 from typing import Optional
 
-from fastapi import (APIRouter, Depends, File, Form, HTTPException, UploadFile,
-                     status)
+from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status, Cookie
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
@@ -30,24 +29,20 @@ async def create_new_pet(
             "bio": bio,
             "breed": breed,
         }
-        
+
         response = create_pet(db, pet_data, author.id, image)
-        return JSONResponse(content=response.model_dump(), 
-                          status_code=response.status_code)
-                          
+        return JSONResponse(content=response.model_dump(), status_code=response.status_code)
+
     except HTTPException:
         raise
     except Exception:
         raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="An error occurred while processing the image"
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="An error occurred while processing the image"
         )
 
+
 @router.get("/my-pets", response_model=Response)
-async def get_my_pets(
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
+async def get_my_pets(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     try:
         user_pets = db.query(Pet).filter(Pet.owner_id == current_user.id).all()
         pet_list_response = []
@@ -77,17 +72,18 @@ async def read_pet(pet_id: int, db: Session = Depends(get_db)):
     return pet
 
 
+# fetch all pets that are not owned by the current user
 @router.get("/get-all", response_model=Response)
-def get_all_pets(db: Session = Depends(get_db)):
-    response = read_all_pets(db)
-    return JSONResponse(content=response.model_dump(), status_code=response.status_code)
+def get_all_pets(db: Session = Depends(get_db), user_auth_token: str = Cookie(None, alias="auth_token")):
+    try:
+        response = read_all_pets(db, user_auth_token)
+        return JSONResponse(content=response.model_dump(), status_code=response.status_code)
+    except Exception as e:
+        print(e)
+
 
 @router.delete("/{pet_id}", response_model=Response)
-async def delete_pet_endpoint(
-    pet_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
+async def delete_pet_endpoint(pet_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     try:
         result = delete_pet(db, pet_id, current_user.id)
         if result:
