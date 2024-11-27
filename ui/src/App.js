@@ -97,9 +97,9 @@ function App() {
             path="/matches/:petId"
             element={
             isAuthenticated ? <MatchesList /> : <Navigate to="/login" replace />
-          }
-          />        
-        <Route
+            }
+          />
+                    <Route
             path="/my-likes/:petId"
             element={
               isAuthenticated ? (
