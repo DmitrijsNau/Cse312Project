@@ -1,5 +1,7 @@
-import React from "react";
-import { Outlet, Navigate, Link } from "react-router-dom";
+import React, { useState }   from "react";
+import { Outlet, Link } from "react-router-dom";
+import ChatModal from '@components/ChatModal';
+
 import "./Layout.css";
 
 const Layout = ({
@@ -8,6 +10,20 @@ const Layout = ({
   currentUsername,
   setCurrentUsername,
 }) => {
+  const [isChatModalOpen, setIsChatModalOpen] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+
+  const openChatModal = () => {
+    setIsChatModalOpen(true);
+    // Optionally, you can set a default recipientId or leave it null
+    setSelectedUserId(null);
+  };
+
+  const closeChatModal = () => {
+    setIsChatModalOpen(false);
+    setSelectedUserId(null);
+  };
+
   const handleLogout = async (e) => {
     e.preventDefault();
     try {
@@ -47,9 +63,9 @@ const Layout = ({
                   </Link>
                 </li>
                 <li>
-                  <Link to="/homepage" className="nav-button">
-                    Settings
-                  </Link>
+              <button onClick={openChatModal} className="nav-button">
+                My DMs
+              </button>
                 </li>
               </ul>
             </nav>
@@ -65,6 +81,11 @@ const Layout = ({
           <main>
             <Outlet />
           </main>
+          <ChatModal
+        isOpen={isChatModalOpen}
+        onClose={closeChatModal}
+        recipientId={selectedUserId}
+      />
         </div>
       ) : (
         <div>

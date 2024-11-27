@@ -1,10 +1,11 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import APIRouter, FastAPI
+from fastapi import APIRouter, FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
+from app.core.ws import ConnectionManager
 from app.core.config import config
 from app.core.db import init_db
 from app.core.middleware import ContentTypeOptionsMiddleware
@@ -29,6 +30,20 @@ api.include_router(auth.router, prefix="/auth")
 api.include_router(pets.router, prefix="/pets")
 api.include_router(likes.router, prefix="/likes")
 
+manager = ConnectionManager()
+
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, conversationId: int):
+    await manager.connect(websocket, conversationId)
+    try:
+        while True:
+            data = await websocket.receive_text()
+            await manager.broadcast(data, conversationId)
+    except WebSocketDisconnect:
+        manager.disconnect(websocket, conversationId)
+
+
 print(config.UPLOAD_DIR, flush=True)
 # serve the stuff
 # Serve the static files from the public and frontend build directories
@@ -36,6 +51,7 @@ app.mount("/api", api)
 
 # for serving user uploaded images
 app.mount(config.IMAGES_PATH, StaticFiles(directory=config.UPLOAD_DIR), name="images")
+
 
 # Catch-all route to serve index.html for any unmatched routes
 @app.get("/{full_path:path}", include_in_schema=False)

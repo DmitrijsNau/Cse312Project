@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Heart } from 'lucide-react';
+import { ArrowLeft, MessagesSquare, PawPrint } from 'lucide-react';
 import config from '@config'
 import styles from './matches.module.css';
+import ChatModal from '@components/ChatModal';
 
 
 //make this look better 
@@ -11,9 +12,22 @@ const MatchesList = () => {
   const [pet, setPet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedUserId, setSelectedUserId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const { petId } = useParams();
   const navigate = useNavigate();
+
+  const onDMsClick = (userId) => {
+    setSelectedUserId(userId);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedUserId(null);
+  };
 
 
   //fetch the data when component loads
@@ -100,7 +114,24 @@ const MatchesList = () => {
                   </span>
                 </div>
                 <h3 className={styles.username}>{match.username}</h3>
-                <Heart className={`${styles.buttonIcon} ${styles.likeIcon}`} />
+                <div className={styles.buttonGroup}>
+        <button
+          className={styles.actionButton}
+          onClick={() => onDMsClick(match.id)}
+          aria-label="View DMs"
+        >
+          <MessagesSquare className={styles.buttonIcon} />
+          <span>DM</span>
+        </button>
+        <button
+          className={styles.actionButton}
+          onClick={() => navigate(`/user/${match.id}`)}
+          aria-label="View Pets"
+        >
+          <PawPrint className={styles.buttonIcon} />
+          <span>View Pets</span>
+        </button>
+      </div>
               </div>
             </div>
           ))
@@ -114,6 +145,11 @@ const MatchesList = () => {
           </div>
         )}
       </div>
+      <ChatModal
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        recipientId={selectedUserId}
+      />
     </main>
   );
 };

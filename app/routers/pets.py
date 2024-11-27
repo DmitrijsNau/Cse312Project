@@ -2,7 +2,7 @@ from typing import Optional
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status, Cookie
 from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.core.auth import get_current_user
 from app.core.db import get_db
@@ -64,8 +64,8 @@ async def get_my_pets(db: Session = Depends(get_db), current_user: User = Depend
         return Response(message=str(e), err=True, status_code=500)
 
 
-@router.get("/by-id", response_model=PetResponse)
-async def read_pet(pet_id: int, db: Session = Depends(get_db)):
+@router.get("/by-id")
+def read_pet(pet_id: int, db: Session = Depends(get_db)):
     pet = get_pet(db, pet_id)
     if pet is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found")
@@ -95,24 +95,32 @@ async def delete_pet_endpoint(pet_id: int, db: Session = Depends(get_db), curren
 
 
 @router.get("/{pet_id}/matches", response_model=Response)
-async def get_pet_matches(
-    pet_id: int,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user)
-):
+async def get_pet_matches(pet_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     pet = get_pet(db, pet_id)
     if not pet or pet.owner_id != current_user.id:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Pet not found or unauthorized"
-        )
-        
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pet not found or unauthorized")
+
     matched_users = db.query(User).filter(User.id.in_(pet.likes)).all()
-    return Response(
-        data=[{
-            "id": user.id,
-            "username": user.username
-        } for user in matched_users],
-        err=False,
-        status_code=200
-    )
+    return Response(data=[{"id": user.id, "username": user.username} for user in matched_users], err=False, status_code=200)
+
+
+# fetch all pets belonging to a user
+@router.get("/by-user")
+def get_user_pets(user_id: int, db: Session = Depends(get_db)):
+    user_pets = db.query(Pet).filter(Pet.owner_id == user_id).options(joinedload(Pet.owner)).all()
+    pets = []
+    for pet in user_pets:
+        pets.append(
+            {
+                "name": pet.name,
+                "bio": pet.bio,
+                "breed": pet.breed,
+                "id": pet.id,
+                "like_count": pet.get_like_count(),
+                "likes": pet.likes,
+                "image_url": pet.image_url,
+                "owner_username": pet.owner.username,
+            }
+        )
+    print(pets)
+    return Response(data=pets, err=False, status_code=200)
