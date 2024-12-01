@@ -1,13 +1,17 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import APIRouter, FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, FastAPI, WebSocket, WebSocketDisconnect, Depends
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy.orm import Session
+
 
 from app.core.ws import ConnectionManager
+from app.models.user import User
+from app.core.auth import get_current_user
 from app.core.config import config
-from app.core.db import init_db
+from app.core.db import init_db, get_db
 from app.core.middleware import ContentTypeOptionsMiddleware
 from app.routers import auth, likes, pets, conversations
 
@@ -35,12 +39,15 @@ manager = ConnectionManager()
 
 
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket, conversationId: int):
-    await manager.connect(websocket, conversationId)
+async def websocket_endpoint(
+    websocket: WebSocket, conversationId: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
+):
+    await manager.connect(websocket, conversationId, current_user.id)
     try:
         while True:
             data = await websocket.receive_text()
-            await manager.broadcast(data, conversationId)
+            print(f"Received data: {data}")
+            await manager.broadcast(data, conversationId, db, current_user)
     except WebSocketDisconnect:
         manager.disconnect(websocket, conversationId)
 

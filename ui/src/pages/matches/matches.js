@@ -25,7 +25,7 @@ const MatchesList = () => {
     setIsModalOpen(true);
 
     // Establish WebSocket connection
-    const ws = new WebSocket(`ws://localhost:8000/ws?conversationId=${userId}`);
+    const ws = new WebSocket(`ws://localhost:8080/ws?conversationId=${userId}`);
     ws.onopen = () => {
       console.log('WebSocket connected');
     };

@@ -42,7 +42,6 @@ def get_user_by_token(db: Session, token: str) -> Optional[User]:
 
 
 def get_current_user(auth_token: Optional[str] = Cookie(None, alias="auth_token"), db: Session = Depends(get_db)) -> User:
-    print("Getting current user")
     if not auth_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
 

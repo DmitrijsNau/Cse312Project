@@ -24,7 +24,6 @@ def init_db():
 
 
 def get_db():
-    print("Getting db")
     db = db_session()
     try:
         yield db

@@ -17,7 +17,7 @@ const ConversationsModal = ({ isOpen, onClose, recipientId }) => {
 
   useEffect(() => {
     if (activeConversation) {
-      const ws = new WebSocket(`ws://localhost:8000/ws?conversationId=${activeConversation.id}`);
+      const ws = new WebSocket(`ws://localhost:8080/ws?conversationId=${activeConversation.id}`);
       ws.onopen = () => {
         console.log('WebSocket connected');
       };
@@ -36,13 +36,14 @@ const ConversationsModal = ({ isOpen, onClose, recipientId }) => {
 
   const fetchConversations = async () => {
     try {
-      const response = await fetch('/api/conversations/', { credentials: 'include' });
+      const response = await fetch('/api/conversations/get-all', { credentials: 'include' });
       const data = await response.json();
       setConversations(data);
     } catch (error) {
       console.error('Error fetching conversations', error);
     }
   };
+  
 
   const sendMessage = () => {
     if (socket && input.trim()) {
@@ -52,6 +53,11 @@ const ConversationsModal = ({ isOpen, onClose, recipientId }) => {
       setInput('');
     }
   };
+
+  const setActiveConvo = (conversation) => {
+    setActiveConversation(conversation);
+    setMessages(conversation.messages);
+  }
 
   if (!isOpen) return null;
 
@@ -67,15 +73,15 @@ const ConversationsModal = ({ isOpen, onClose, recipientId }) => {
               <div
                 key={conv.id}
                 className={styles.conversationItem}
-                onClick={() => setActiveConversation(conv)}
+                onClick={() => setActiveConvo(conv)}
               >
-                {conv.partnerUsername}
+                {conv.recipient_username}
               </div>
             ))}
           </div>
         ) : (
           <div className={styles.chatContainer}>
-            <button onClick={() => setActiveConversation(null)} className={styles.backButton}>
+            <button onClick={() => setActiveConvo(null)} className={styles.backButton}>
               Back to Conversations
             </button>
             <div className={styles.chatMessages}>
