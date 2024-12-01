@@ -1,12 +1,14 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status, Cookie
+from fastapi import (APIRouter, Cookie, Depends, File, Form, HTTPException,
+                     UploadFile, status)
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session, joinedload
 
 from app.core.auth import get_current_user
 from app.core.db import get_db
 from app.core.pet import create_pet, delete_pet, get_pet, read_all_pets
+from app.core.ws import manager
 from app.models.pet import Pet, PetResponse
 from app.models.response import Response
 from app.models.user import User
@@ -31,6 +33,8 @@ async def create_new_pet(
         }
 
         response = create_pet(db, pet_data, author.id, image)
+        if not response.err and response.data:
+            await manager.broadcast_new_pet(response.data.dict())
         return JSONResponse(content=response.model_dump(), status_code=response.status_code)
 
     except HTTPException:

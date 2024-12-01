@@ -1,19 +1,18 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import APIRouter, FastAPI, WebSocket, WebSocketDisconnect, Depends
+from fastapi import APIRouter, Depends, FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 
-
-from app.core.ws import ConnectionManager
-from app.models.user import User
 from app.core.auth import get_current_user
 from app.core.config import config
-from app.core.db import init_db, get_db
+from app.core.db import get_db, init_db
 from app.core.middleware import ContentTypeOptionsMiddleware
-from app.routers import auth, likes, pets, conversations
+from app.core.ws import manager
+from app.models.user import User
+from app.routers import auth, conversations, likes, pets
 
 
 # create databases on startup
@@ -35,9 +34,6 @@ api.include_router(pets.router, prefix="/pets")
 api.include_router(likes.router, prefix="/likes")
 api.include_router(conversations.router, prefix="/conversations")
 
-manager = ConnectionManager()
-
-
 @app.websocket("/ws")
 async def websocket_endpoint(
     websocket: WebSocket, conversationId: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
@@ -50,6 +46,19 @@ async def websocket_endpoint(
             await manager.broadcast(data, conversationId, db, current_user)
     except WebSocketDisconnect:
         manager.disconnect(websocket, conversationId)
+
+@app.websocket("/ws/pets")
+async def websocket_pet_feed(
+    websocket: WebSocket,
+    current_user: User = Depends(get_current_user)
+):
+    await manager.connect_to_pet_feed(websocket)
+    try:
+        while True:
+            # Keep connection alive
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        manager.disconnect_from_pet_feed(websocket)
 
 
 print(config.UPLOAD_DIR, flush=True)
