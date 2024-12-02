@@ -1,89 +1,99 @@
+.my-pets-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  min-height: 100vh; /* Ensure the container takes at least the full height of the viewport */
+}
+
+.backButton {
+  align-self: flex-start;
+  margin-bottom: 20px;
+}
+
+.page-title-container {
+  margin-bottom: 20px;
+}
+
 .matchesGrid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 2rem;
-    padding: 1rem;
-  }
-  
-  .matchCard {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .infoSection {
-    text-align: center;
-    padding: 10px;
-    border-radius: 10px;
-    background-color: #f9f9f9;
-  }
-  
-  .avatarContainer {
-    width: 4rem;
-    height: 4rem;
-    margin: 0 auto 1rem;
-    background-color: #4169E1;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .avatarLetter {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-  
-  .username {
-    font-size: 1.2rem;
-    color: #333;
-    margin-bottom: 0.5rem;
-  }
-  
-  .likeIcon {
-    color: #dc2626;
-    fill: #dc2626;
-  }
-  
-  .backButton {
-    margin-bottom: 2rem;
-  }
-  
-  .actionButton {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.5rem;
-    border: none;
-    border-radius: 4px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    background-color: #4169E1;
-    color: white;
-  }
-  
-  .actionButton:hover {
-    background-color: #3158d3;
-  }
-  
-  .buttonIcon {
-    width: 1.2rem;
-    height: 1.2rem;
-  }
-  
-  .emptyState {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 3rem;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .emptyStateSubtext {
-    color: #666;
-    margin-top: 0.5rem;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.matchCard {
+  background: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px; /* Ensure the card is tall enough to contain its content */
+}
+
+.infoSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.avatarContainer {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.avatarLetter {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.username {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+
+.actionButton {
+  flex: 1;
+  padding: 10px;
+  background-color: #4169E1;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.actionButton:hover {
+  background-color: #0056b3;
+}
+
+.buttonIcon {
+  margin-right: 5px;
+}
+
+.emptyState {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.emptyStateSubtext {
+  color: #888;
+  margin-top: 10px;
+}

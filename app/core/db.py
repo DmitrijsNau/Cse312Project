@@ -27,5 +27,8 @@ def get_db():
     db = db_session()
     try:
         yield db
+    except Exception as e:
+        print(f"Error creating database tables: {e}")
+        raise
     finally:
         db.close()

@@ -1,6 +1,6 @@
 // PetCard.js
 import React, { useState, useEffect } from "react";
-import { Heart, Trash2 } from "lucide-react";
+import { Heart, Trash2, MessagesSquare } from "lucide-react";
 import styles from "./PetCard.module.css";
 
 const PetCard = ({ pet, actions }) => {
@@ -76,6 +76,17 @@ const PetCard = ({ pet, actions }) => {
         <span>Delete</span>
       </button>
     ),
+    myLikes: (onMyLikesClick) => (
+      <button
+        key="myLikes"
+        className={styles.matchesButton}
+        onClick={() => onMyLikesClick(pet.id)}
+        aria-label="View My Likes"
+      >
+        <Heart className={styles.buttonIcon} />
+        <span>My Likes</span>
+      </button>
+    ),
     matches: (onMatchesClick) => (
       <button
         key="matches"
@@ -83,7 +94,7 @@ const PetCard = ({ pet, actions }) => {
         onClick={() => onMatchesClick(pet.id)}
         aria-label="View matches"
       >
-        <Heart className={styles.buttonIcon} />
+        <MessagesSquare className={styles.buttonIcon} />
         <span>Matches</span>
       </button>
     ),

@@ -1,6 +1,17 @@
-# CSE 312
+# Pupple
 
-## Rules to Follow:
+A match-making site for your pets.
+
+The full site is accessible [here](https://pupli.me/).
+
+Please read below to learn about how to use all the features.
+
+### Usage
+
+To DM other users, you both must register a pet, then like each others pets.
+After, you may open "My DMs" and start a new conversation!
+
+## Development Rules to Follow:
 
 - Use branches for features
 - Only merge branches to dev (dev will be merged to main during meetings)
