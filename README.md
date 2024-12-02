@@ -2,6 +2,11 @@
 
 The full site is accessible [here](https://pupli.me/).
 
+## Usage
+
+To DM other users, you both must register a pet, then like each others pets.
+After, you may open "My DMs" and start a new conversation!
+
 ## Rules to Follow:
 
 - Use branches for features
