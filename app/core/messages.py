@@ -1,7 +1,8 @@
+from sqlalchemy.orm import Session
+
 from app.models.conversation import Conversation
 from app.models.message import Message
 from app.models.user import User
-from sqlalchemy.orm import Session
 
 
 def save_message(conversation_id: int, content: str, db: Session, current_user: User):
@@ -18,7 +19,7 @@ def save_message(conversation_id: int, content: str, db: Session, current_user: 
         print("User not in conversation")
         return
     print("Saving message")
-    message = Message(conversation_id=conversation_id, sender_id=current_user.id, content=content)
+    message = Message(conversation_id=conversation_id, sender_id=current_user.id, content=content, sender_username=current_user.username)
     db.add(message)
     db.commit()
     return message

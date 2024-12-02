@@ -2,10 +2,7 @@ import json
 from typing import List
 
 from fastapi import WebSocket
-from sqlalchemy.orm import Session
 
-from app.core.messages import save_message
-from app.models.user import User
 
 
 class ConnectionManager:
@@ -34,16 +31,18 @@ class ConnectionManager:
         if websocket in self.pet_feed_connections:
             self.pet_feed_connections.remove(websocket)
 
-    async def broadcast(self, message: str, conversation_id: int, db: Session, current_user: User):
+    async def broadcast(self, message: str, conversation_id: int):
         message_data = json.loads(message)
-        content = message_data.get("content")
-        if content:
-            save_message(conversation_id, content, db, current_user)
-            for ws, uid in self.active_connections.get(conversation_id, []):
-                if uid != current_user.id:
-                    await ws.send_text(message)
-        else:
-            print("No content in message")
+        sender_id = message_data.get("sender_id")
+        
+        if conversation_id in self.active_connections:
+            for ws, uid in self.active_connections[conversation_id]:
+                if uid != sender_id:
+                    try:
+                        await ws.send_text(message)
+                    except:
+                        # Handle any websocket errors
+                        print(f"Error sending message to user {uid}")
 
     async def broadcast_new_pet(self, pet_data: dict):
         """Broadcast new pet data to all connected clients"""

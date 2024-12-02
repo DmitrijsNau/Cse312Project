@@ -1,7 +1,9 @@
-from sqlalchemy import Column, Integer, ForeignKey, String, DateTime
-from sqlalchemy.orm import relationship
-from app.core.db import Base
 from datetime import datetime
+
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+
+from app.core.db import Base
 
 
 class Message(Base):
@@ -12,6 +14,7 @@ class Message(Base):
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     content = Column(String, nullable=False)
     timestamp = Column(DateTime, default=datetime.now)
+    sender_username = Column(String, nullable=False) # I think we could fetch this but idc
 
     conversation = relationship("Conversation", back_populates="messages")
     sender = relationship("User")

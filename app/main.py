@@ -1,18 +1,14 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import APIRouter, Depends, FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import (APIRouter, FastAPI)
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
-from sqlalchemy.orm import Session
 
-from app.core.auth import get_current_user
 from app.core.config import config
-from app.core.db import get_db, init_db
+from app.core.db import init_db
 from app.core.middleware import ContentTypeOptionsMiddleware
-from app.core.ws import manager
-from app.models.user import User
-from app.routers import auth, conversations, likes, pets
+from app.routers import auth, conversations, likes, pets, ws
 
 
 # create databases on startup
@@ -33,36 +29,9 @@ api.include_router(auth.router, prefix="/auth")
 api.include_router(pets.router, prefix="/pets")
 api.include_router(likes.router, prefix="/likes")
 api.include_router(conversations.router, prefix="/conversations")
-
-@app.websocket("/ws")
-async def websocket_endpoint(
-    websocket: WebSocket, conversationId: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)
-):
-    await manager.connect(websocket, conversationId, current_user.id)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            print(f"Received data: {data}")
-            await manager.broadcast(data, conversationId, db, current_user)
-    except WebSocketDisconnect:
-        manager.disconnect(websocket, conversationId)
-
-@app.websocket("/ws/pets")
-async def websocket_pet_feed(
-    websocket: WebSocket,
-    current_user: User = Depends(get_current_user)
-):
-    await manager.connect_to_pet_feed(websocket)
-    try:
-        while True:
-            # Keep connection alive
-            await websocket.receive_text()
-    except WebSocketDisconnect:
-        manager.disconnect_from_pet_feed(websocket)
+app.include_router(ws.router, prefix="/ws")
 
 
-print(config.UPLOAD_DIR, flush=True)
-# serve the stuff
 # Serve the static files from the public and frontend build directories
 app.mount("/api", api)
 

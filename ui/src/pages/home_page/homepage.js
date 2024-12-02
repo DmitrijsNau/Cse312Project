@@ -33,8 +33,7 @@ const Homepage = () => {
   useEffect(() => {
     fetchPets();
 
-    // Setup WebSocket connection
-    const ws = new WebSocket(`ws://${window.location.host}/ws/pets`);
+    const ws = new WebSocket(`${config.wsUrl}/pets`);
 
     ws.onopen = () => {
       console.log("Connected to pet feed");
@@ -44,9 +43,7 @@ const Homepage = () => {
     ws.onmessage = (event) => {
       const message = JSON.parse(event.data);
       if (message.type === "new_pet") {
-        // Add new pet to the list
         setPets((prevPets) => {
-          // Filter out pets from the current user, just like in the original get-all endpoint
           if (
             message.data.owner_username !==
             localStorage.getItem("currentUsername")
@@ -60,9 +57,18 @@ const Homepage = () => {
 
     ws.onerror = (error) => {
       console.error("WebSocket error:", error);
+      setError(
+        "Failed to connect to pet feed. Please try refreshing the page.",
+      );
     };
 
-    // Cleanup on unmount
+    ws.onclose = (event) => {
+      console.log("WebSocket closed:", event);
+      if (event.code === 1008) {
+        setError("Authentication error. Please log in again.");
+      }
+    };
+
     return () => {
       if (socket) {
         socket.close();
