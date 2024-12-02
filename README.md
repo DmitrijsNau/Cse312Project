@@ -1,13 +1,17 @@
 # Pupple
 
+A match-making site for your pets.
+
 The full site is accessible [here](https://pupli.me/).
 
-## Usage
+Please read below to learn about how to use all the features.
+
+### Usage
 
 To DM other users, you both must register a pet, then like each others pets.
 After, you may open "My DMs" and start a new conversation!
 
-## Rules to Follow:
+## Development Rules to Follow:
 
 - Use branches for features
 - Only merge branches to dev (dev will be merged to main during meetings)
