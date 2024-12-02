@@ -1,4 +1,6 @@
-# CSE 312
+# Pupple
+
+The full site is accessible [here](https://pupli.me/).
 
 ## Rules to Follow:
 
