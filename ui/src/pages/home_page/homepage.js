@@ -7,6 +7,7 @@ const Homepage = () => {
   const [pets, setPets] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
   const [socket, setSocket] = useState(null);
 
   const fetchPets = async () => {
@@ -76,6 +77,17 @@ const Homepage = () => {
     };
   }, []);
 
+  const filteredPets = pets
+    ? pets.filter((pet) => {
+        const query = searchQuery.toLowerCase();
+        return (
+          (pet.name && pet.name.toLowerCase().includes(query)) ||
+          (pet.breed && pet.breed.toLowerCase().includes(query)) ||
+          (pet.bio && pet.bio.toLowerCase().includes(query))
+        );
+      })
+    : [];
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -90,8 +102,24 @@ const Homepage = () => {
         <div className="page-title-container">
           <h2 className="page-title">Check Out Other Pets!</h2>
         </div>
+        <div style={{ textAlign: "center", marginBottom: "20px" }}>
+          <input
+            type="text"
+            placeholder="Search pets by name, breed, or bio..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            style={{
+              /* aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa */
+              width: "80%",
+              padding: "10px",
+              borderRadius: "8px",
+              border: "1px solid #ccc",
+              fontSize: "1rem",
+            }}
+          />
+        </div>
         <div className="pets-grid">
-          {pets.map((pet) => (
+          {filteredPets.map((pet) => (
             <PetCard key={pet.id} pet={pet} actions={["like"]} />
           ))}
         </div>
