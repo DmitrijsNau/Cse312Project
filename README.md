@@ -44,8 +44,8 @@ easy way to search for pets with a matching bio, breed, or name.
 10. Verify that this new pet appears in the search results of the first browser
     without refreshing.
 11. Register another pet with a random name, bio, and breed under 20 characters.
-    Do not set a publication date to this pet.
-12. Verify that this new pet does NOT appear in the search results of the first
+    This string cannot be the same as before. Do not set a publication date to this pet.
+13. Verify that this new pet does NOT appear in the search results of the first
     browser.
 
 ## Development Rules to Follow:
