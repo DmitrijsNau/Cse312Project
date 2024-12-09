@@ -8,7 +8,15 @@ const MyPets = () => {
   const [pets, setPets] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [countdowns, setCountdowns] = useState([]);
   const navigate = useNavigate();
+
+  const renderCountdown = (petId) => {
+    const countdown = countdowns.find((c) => c.pet_id === petId);
+    if (!countdown) return null;
+
+    return <span>{countdown}s remaining</span>;
+  };
 
   const fetchPets = async () => {
     try {
@@ -49,6 +57,18 @@ const MyPets = () => {
 
   useEffect(() => {
     fetchPets();
+    const ws = new WebSocket(`${config.wsUrl}/countdown`);
+
+    ws.onmessage = (event) => {
+      const message = JSON.parse(event.data);
+      if (message.type === "countdown_update") {
+        setCountdowns(message.data);
+      }
+    };
+
+    ws.onclose = () => console.log("WebSocket closed.");
+
+    return () => ws.close();
   }, []);
 
   if (loading) {
@@ -76,19 +96,36 @@ const MyPets = () => {
         </div>
       ) : (
         <div className="pets-grid">
-          {pets.map((pet) => (
-            <PetCard
-              key={pet.id}
-              pet={pet}
-              actions={[
-                { type: "delete", handler: handleDelete },
-                {
-                  type: "matches",
-                  handler: (petId) => navigate(`/matches/${petId}`),
-                },
-              ]}
-            />
-          ))}
+          {pets.map((pet) => {
+            const countdown = countdowns.find((c) => c.pet_id === pet.id);
+
+            const timeRemaining =
+              countdown && countdown.time_remaining > 0
+                ? `${Math.floor(countdown.time_remaining / 60)}m ${Math.floor(
+                    countdown.time_remaining % 60,
+                  )}s remaining`
+                : null;
+
+            return (
+              <div key={pet.id} className="pet-card-container">
+                <PetCard
+                  pet={pet}
+                  actions={[
+                    { type: "delete", handler: handleDelete },
+                    {
+                      type: "matches",
+                      handler: (petId) => navigate(`/matches/${petId}`),
+                    },
+                  ]}
+                />
+                {!pet.is_public && timeRemaining && (
+                  <div className="countdown-overlay">
+                    <span>{timeRemaining}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
     </main>
