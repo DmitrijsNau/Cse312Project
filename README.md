@@ -27,7 +27,7 @@ easy way to search for pets with a matching bio, breed, or name.
 4. On one browser, navigate to the homepage. In the search bar, choose any
    string less than 20 characters and search it. For this browser, stay on this
    page for the remainder of the test.
-5. On the other browser, navigate to the register pet page. a. Register a pet
+5. On the other browser, navigate to the register pet page. Register a pet
    with the name equal to the string in the search bar, the remaining fields
    (bio, breed) could be anything EXCEPT this string. Do not add a publication
    date to this pet.
