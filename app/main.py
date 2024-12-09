@@ -1,13 +1,14 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import (APIRouter, FastAPI)
+from fastapi import APIRouter, FastAPI
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from app.core.config import config
 from app.core.db import init_db
 from app.core.middleware import ContentTypeOptionsMiddleware
+from app.core.rate_limiter import RateLimitMiddleware
 from app.routers import auth, conversations, likes, pets, ws
 
 
@@ -22,7 +23,9 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 api = FastAPI(root_path="/api")
 api.add_middleware(ContentTypeOptionsMiddleware)
-app.add_middleware(ContentTypeOptionsMiddleware)
+api.add_middleware(ContentTypeOptionsMiddleware) # just realized there are two here... delete one?
+app.add_middleware(RateLimitMiddleware)
+
 # backend routes
 api_router = APIRouter()
 api.include_router(auth.router, prefix="/auth")
