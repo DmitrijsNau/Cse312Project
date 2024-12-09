@@ -1,4 +1,6 @@
+import asyncio
 import json
+from datetime import datetime
 
 from fastapi import APIRouter, Cookie, Depends, WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
@@ -6,6 +8,7 @@ from sqlalchemy.orm import Session
 from app.core.auth import get_user_by_token
 from app.core.db import get_db
 from app.core.messages import save_message
+from app.core.pet import Pet
 from app.core.ws import manager
 from app.models.conversation import Conversation
 
@@ -86,3 +89,44 @@ async def websocket_pet_feed(
             await websocket.receive_text()
     except WebSocketDisconnect:
         manager.disconnect_from_pet_feed(websocket)
+
+@router.websocket("/countdown")
+async def pet_countdown_websocket(
+    websocket: WebSocket,
+    db: Session = Depends(get_db),
+    auth_token: str = Cookie(None, alias="auth_token"),
+):
+    if not auth_token:
+        await websocket.close(code=1008, reason="Not authenticated")
+        return
+
+    user = get_user_by_token(db, auth_token)
+
+    if not user:
+        await websocket.close(code=1008, reason="Invalid authentication token")
+        return
+
+    await websocket.accept()
+
+    try:
+        while True:
+            pets = db.query(Pet).filter(
+                Pet.owner_id == user.id,
+                Pet.is_public == False,
+                Pet.release_date > datetime.now()
+            ).all()
+
+            countdowns = [
+                {
+                    "pet_id": pet.id,
+                    "name": pet.name,
+                    "time_remaining": (pet.release_date- datetime.now()).total_seconds(),
+                }
+                for pet in pets
+            ]
+
+            await websocket.send_json({"type": "countdown_update", "data": countdowns})
+            
+            await asyncio.sleep(0.5)
+    except WebSocketDisconnect:
+        print("Client disconnected from pet countdown WebSocket.")

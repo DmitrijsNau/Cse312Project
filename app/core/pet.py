@@ -1,15 +1,18 @@
 import imghdr
 import os
 import uuid
+from asyncio import sleep
+from datetime import datetime
 from typing import Optional
 
-from fastapi import HTTPException, UploadFile, status, Cookie
+from fastapi import HTTPException, UploadFile, status
 from sqlalchemy.orm import Session, joinedload
 
+from app.core.auth import get_user_by_token
 from app.core.config import config
+from app.core.ws import manager
 from app.models.pet import Pet, PetResponse
 from app.models.response import Response
-from app.core.auth import get_user_by_token
 
 ALLOWED_IMAGE_TYPES = {"jpeg", "png", "gif"}  # TODO: maybe move this to config
 
@@ -54,7 +57,7 @@ def read_all_pets(db: Session, user_auth_token: str):
     if not user:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid authentication token")
 
-    pets = db.query(Pet).options(joinedload(Pet.owner)).all()
+    pets = db.query(Pet).options(joinedload(Pet.owner)).filter(Pet.is_public == True).all()
     pet_list_response = []
     for pet in pets:
         if pet.owner_id != user.id:
@@ -137,6 +140,30 @@ def delete_pet(db: Session, pet_id: int, owner_id: int) -> bool:
 #         return True
 #     return False
 
+async def publish_pet(pet_id: int, db: Session):
+    pet: Pet = db.query(Pet).filter(Pet.id == pet_id).first()
+    if not pet or pet.is_public:
+        return
+    
+    delay = (pet.release_date - datetime.now()).total_seconds()
+    if delay > 0:
+        await sleep(delay)
+    
+    pet.is_public = True
+    pet.release_date = None
+    db.commit()
+
+    pet_data = {
+            "id": pet.id,
+            "name": pet.name,
+            "bio": pet.bio,
+            "breed": pet.breed,
+            "image_url": pet.image_url,
+            "owner_id": pet.owner_id,
+            "like_count": pet.get_like_count(),
+            }
+
+    await manager.broadcast_new_pet(pet_data)
 
 def toggle_like(db: Session, pet_id: int, user_id: int) -> Optional[bool]:
     pet = get_pet(db, pet_id)

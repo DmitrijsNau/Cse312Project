@@ -1,13 +1,15 @@
+from datetime import datetime
 from typing import Optional
 
-from fastapi import (APIRouter, Cookie, Depends, File, Form, HTTPException,
-                     UploadFile, status)
+from fastapi import (APIRouter, BackgroundTasks, Cookie, Depends, File, Form,
+                     HTTPException, UploadFile, status)
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session, joinedload
 
 from app.core.auth import get_current_user
 from app.core.db import get_db
-from app.core.pet import create_pet, delete_pet, get_pet, read_all_pets
+from app.core.pet import (create_pet, delete_pet, get_pet, publish_pet,
+                          read_all_pets)
 from app.core.ws import manager
 from app.models.pet import Pet, PetResponse
 from app.models.response import Response
@@ -18,23 +20,34 @@ router = APIRouter(tags=["pets"])
 
 @router.post("/create", response_model=Response)
 async def create_new_pet(
+    background_tasks: BackgroundTasks,
     name: str = Form(...),
     bio: str = Form(None),
     breed: str = Form(...),
     image: Optional[UploadFile] = File(None),
+    release_date: Optional[datetime] = Form(None),
     db: Session = Depends(get_db),
     author: User = Depends(get_current_user),
 ):
     try:
+        is_public = release_date is None or release_date <= datetime.now()
+
         pet_data = {
             "name": name,
             "bio": bio,
             "breed": breed,
+            "is_public": is_public,
+            "release_date": release_date if not is_public else None,
         }
 
         response = create_pet(db, pet_data, author.id, image)
+
         if not response.err and response.data:
-            await manager.broadcast_new_pet(response.data.dict())
+            if not is_public:
+                background_tasks.add_task(publish_pet, response.data.id, db)
+            else:
+                await manager.broadcast_new_pet(response.data.dict())
+
         return JSONResponse(content=response.model_dump(), status_code=response.status_code)
 
     except HTTPException:
@@ -61,6 +74,7 @@ async def get_my_pets(db: Session = Depends(get_db), current_user: User = Depend
                     like_count=pet.get_like_count(),
                     likes=pet.likes,
                     image_url=pet.image_url,
+                    is_public=pet.is_public,
                 )
             )
         return Response(data=pet_list_response, err=False, status_code=200)

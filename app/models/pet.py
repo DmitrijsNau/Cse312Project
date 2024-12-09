@@ -1,7 +1,8 @@
 from typing import List, Optional
 
 from pydantic import BaseModel
-from sqlalchemy import ARRAY, Column, ForeignKey, Integer, String
+from sqlalchemy import (ARRAY, Boolean, Column, DateTime, ForeignKey, Integer,
+                        String)
 from sqlalchemy.orm import relationship
 
 from app.models.base import Base
@@ -16,6 +17,8 @@ class Pet(Base):
     breed = Column(String, nullable=True)
     likes = Column(ARRAY(Integer), server_default="{}", nullable=False)
     image_url = Column(String, nullable=True)
+    is_public = Column(Boolean, default=False, nullable=False)
+    release_date = Column(DateTime, nullable=True)
 
     owner = relationship("User", back_populates="pets")
 
@@ -47,6 +50,7 @@ class PetResponse(PetBase):
     like_count: int
     likes: List[int]
     owner_username: str
+    is_public: Optional[bool] = None
 
     class Config:
         from_attributes = True
